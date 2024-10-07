@@ -25,9 +25,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'webpack_loader',
-    'User',
-    'Plants',
-    'Guides',
+    'plantfriends.User.apps.UserConfig',
+    'plantfriends.Plants.apps.PlantsConfig',
+    'plantfriends.Guides.apps.GuidesConfig',
     'rest_framework'
 ]
 
