@@ -71,11 +71,11 @@ WSGI_APPLICATION = 'plantfriends.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'plant_friends',
-        'USER': 'Home',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost',
-        'PORT':'',
+        'NAME': 'postgres',
+        'USER': 'postgres.fgkmekdhimkwrjdwpmbv',
+        'PASSWORD': '6MrNSCDUpDa02371',
+        'HOST': 'aws-0-us-east-1.pooler.supabase.com',
+        'PORT':'6543',
     }
 }
 
