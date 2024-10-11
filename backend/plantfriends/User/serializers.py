@@ -1,32 +1,34 @@
 from rest_framework import serializers
 from .models import CustomUser
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'nombre', 'telefono', 'password', 'created_at']
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
+        fields = ['username', 'nombre', 'password', 'telefono', 'email', 'created_at']
+        extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        # Crear el usuario con el método adecuado para manejar la contraseña
-        user = CustomUser(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            nombre=validated_data['nombre'],
-            telefono=validated_data['telefono']
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
+        try:
+            user = CustomUser(
+                username=validated_data['username'],  # Asegúrate de que 'username' esté en validated_data
+                email=validated_data['email'],
+                nombre=validated_data['nombre'],
+                telefono=validated_data['telefono'],
+            )
+            user.set_password(validated_data['password'])  # Almacena la contraseña de forma segura
+            user.save()
 
-    def update(self, instance, validated_data):
-        # Actualizar el usuario manejando la contraseña de forma segura
-        for attr, value in validated_data.items():
-            if attr == 'password':
-                instance.set_password(value)
-            else:
-                setattr(instance, attr, value)
-        instance.save()
-        return instance
+            # Genera el token JWT
+            refresh = RefreshToken.for_user(user)
+            
+            # Serializa el usuario antes de devolverlo
+            user_data = CustomUserSerializer(user).data  # Serializamos el usuario aquí
+
+            return {
+                'user': user_data,  # Devolvemos los datos del usuario serializados
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }
+        except KeyError as e:
+            raise serializers.ValidationError({str(e): 'Este campo es obligatorio.'})
