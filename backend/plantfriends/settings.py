@@ -31,9 +31,10 @@ INSTALLED_APPS = [
     'plantfriends.User.apps.UserConfig',
     'plantfriends.Plants.apps.PlantsConfig',
     'plantfriends.Guides.apps.GuidesConfig',
-    'rest_framework'
+    'rest_framework',
+    'rest_framework_simplejwt'
 ]
-
+AUTH_USER_MODEL='User.CustomUser'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
