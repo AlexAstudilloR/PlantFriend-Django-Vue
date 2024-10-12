@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'plantfriends.User.apps.UserConfig',
     'plantfriends.Plants.apps.PlantsConfig',
     'plantfriends.Guides.apps.GuidesConfig',
+    'plantfriends.Garden.apps.GardenConfig',
     'rest_framework',
     'rest_framework_simplejwt'
 ]
