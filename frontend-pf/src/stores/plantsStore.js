@@ -1,6 +1,15 @@
 // src/store/usePlantsStore.js
 import { defineStore } from 'pinia';
-import { getPlants, getPlantById, createPlant, updatePlant, deletePlant, getCategories} from '../services/axios.plants';
+import { 
+  getPlants, 
+  getPlantById, 
+  createPlant, 
+  updatePlant, 
+  deletePlant, 
+  getCategories, 
+  searchPlantsByName, 
+  filterPlantsByCategory 
+} from '../services/axios.plants';
 
 export const usePlantsStore = defineStore('plants', {
   state: () => ({
@@ -68,5 +77,31 @@ export const usePlantsStore = defineStore('plants', {
         this.error = error;
       }
     },
+
+    // Nueva acción para buscar plantas por nombre
+    async searchPlantsByName(name) {
+      this.loading = true;
+      try {
+        const response = await searchPlantsByName(name);
+        this.plants = response.data;  // Actualiza el estado con las plantas filtradas por nombre
+      } catch (error) {
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    // Nueva acción para filtrar plantas por categoría
+    async filterPlantsByCategory(categoryId) {
+      this.loading = true;
+      try {
+        const response = await filterPlantsByCategory(categoryId);
+        this.plants = response.data;  // Actualiza el estado con las plantas filtradas por categoría
+      } catch (error) {
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
+    }
   },
 });

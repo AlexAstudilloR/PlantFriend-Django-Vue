@@ -20,6 +20,7 @@ class AddToGarden(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(usuario=self.request.user)
+    
 
 # Eliminar una planta del jardín del usuario
 class RemoveFromGarden(generics.DestroyAPIView):

@@ -1,4 +1,6 @@
+import django_filters
 from rest_framework import generics
+from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Plants,Category
@@ -35,3 +37,14 @@ class CategoryCreateView(generics.CreateAPIView):
 class CategoryListCreateView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+class PlantsSearchByNameView(generics.ListAPIView):
+    queryset = Plants.objects.all()
+    serializer_class = PlantsSerializer
+    filter_backends = [filters.SearchFilter]  # Habilitamos la búsqueda
+    search_fields = ['nombre']  # Campo de búsqueda: 'name'
+
+class PlantsFilterByCategoryView(generics.ListAPIView):
+    queryset = Plants.objects.all()
+    serializer_class = PlantsSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]  # Habilitamos los filtros
+    filterset_fields = ['categoria']  # Campo para filtrar: 'category'

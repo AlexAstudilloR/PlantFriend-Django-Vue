@@ -2,6 +2,8 @@
 import os
 from pathlib import Path
 from decouple import config
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -33,8 +35,10 @@ INSTALLED_APPS = [
     'plantfriends.Guides.apps.GuidesConfig',
     'plantfriends.Garden.apps.GardenConfig',
     'rest_framework',
-    'rest_framework_simplejwt'
+    'rest_framework_simplejwt',
+    'django_filters'
 ]
+
 AUTH_USER_MODEL='User.CustomUser'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

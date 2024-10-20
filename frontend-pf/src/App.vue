@@ -1,7 +1,9 @@
 <template>
-
-  <Navbar/>
-  <router-view />
+  <div>
+    <Navbar/>
+    <router-view />
+  </div>
+  
   
 
 </template>
@@ -15,10 +17,6 @@ import Navbar from './components/NavBar.vue';
 
 
 <style scoped>
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+
 
 </style>

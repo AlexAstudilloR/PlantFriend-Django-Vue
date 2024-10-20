@@ -9,7 +9,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class PlantsSerializer(serializers.ModelSerializer):
     guia=serializers.PrimaryKeyRelatedField(queryset=Guides.objects.all())
-    categoria=serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
+    categoria = serializers.SlugRelatedField(slug_field='name', queryset=Category.objects.all())
     class Meta:
         model = Plants
         fields = ['id', 'nombre', 'categoria','imagen', 'guia', 'created_at']  

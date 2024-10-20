@@ -4,6 +4,8 @@ import LoginView from '@/views/LoginView.vue'
 import SignUpView from '@/views/SignUpView.vue'
 import HomeView from '@/views/HomeView.vue'
 import PlantView from '@/views/PlantView.vue'
+import MapView from '@/views/MapView.vue'
+import GardenView from '@/views/GardenView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -32,6 +34,16 @@ const router = createRouter({
       name: 'plants',
       component: PlantView
     },
+    {
+      path: '/map',
+      name: 'map',
+      component: MapView
+    },
+    {
+      path: '/my-garden',
+      name: 'garden',
+      component: GardenView
+    }
   ]
 })
 

@@ -16,8 +16,11 @@
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "axios": "^1.7.7",
+    "leaflet": "^1.9.4",
+    "leaflet-defaulticon-compatibility": "^0.1.2",
     "pinia": "^2.1.7",
     "vue": "^3.4.29",
+    "vue-final-modal": "^4.5.5",
     "vue-router": "^4.3.3"
   },
   "devDependencies": {
