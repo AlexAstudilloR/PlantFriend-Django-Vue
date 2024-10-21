@@ -3,7 +3,7 @@ from plantfriends.Garden.models import Garden
 from .serializer import GardenSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
-
+from plantfriends.Plants.models import Plants
 # Listar el jardín del usuario autenticado
 class UserGardenList(generics.ListAPIView):
     serializer_class = GardenSerializer
@@ -19,8 +19,10 @@ class AddToGarden(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(usuario=self.request.user)
-    
+        planta_id = self.kwargs['planta_id']  # Obtener la ID de la planta desde la URL
+        planta = get_object_or_404(Plants, id=planta_id)  # Buscar la planta por su ID
+        serializer.save(usuario=self.request.user, planta=planta)  # Guardar el jardín con la planta específica
+
 
 # Eliminar una planta del jardín del usuario
 class RemoveFromGarden(generics.DestroyAPIView):

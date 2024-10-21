@@ -1,11 +1,12 @@
-import axios from 'axios';
 
-const API_URL = '/api/auth/usuario/';
+import apiClient from './axios'; // La instancia configurada de axios con el token y CORS
 
-  export const registerUser= (userData) => {
-    return axios.post(`${API_URL}register/`, userData);
-  };
-  
-  export const loginUser= (userData) => {
-    return axios.post(`${API_URL}login/`, userData);
-  };
+const API_URL = '/auth/usuario/';
+
+export const registerUser = (userData) => {
+  return apiClient.post(`${API_URL}register/`, userData);
+};
+
+export const loginUser = (userData) => {
+  return apiClient.post(`${API_URL}login/`, userData);
+};

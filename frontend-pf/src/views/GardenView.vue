@@ -29,9 +29,9 @@
       });
   
       const addPlant = () => {
-        gardenStore.addPlant({ planta: newPlantId.value });
-        newPlantId.value = ''; // Limpiar campo
-      };
+  gardenStore.addPlant(newPlantId.value);  // Pasar directamente el ID de la planta
+  newPlantId.value = '';  // Limpiar el campo después de agregar
+};
   
       const removePlant = (plantaId) => {
         gardenStore.removePlant(plantaId);

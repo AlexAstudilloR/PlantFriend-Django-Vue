@@ -36,9 +36,17 @@ INSTALLED_APPS = [
     'plantfriends.Garden.apps.GardenConfig',
     'rest_framework',
     'rest_framework_simplejwt',
-    'django_filters'
+    'django_filters',
+    'corsheaders'
 ]
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
 AUTH_USER_MODEL='User.CustomUser'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -48,8 +56,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
-
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Cambia el puerto si es necesario
+    # Puedes añadir más dominios si el frontend tiene otras URL
+]
 ROOT_URLCONF = 'plantfriends.urls'
 
 TEMPLATES = [

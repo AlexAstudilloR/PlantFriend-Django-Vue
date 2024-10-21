@@ -17,17 +17,28 @@
         <button type="submit" class="login-button">Iniciar sesión</button>
       </form>
     </div>
+
+    <VueFinalModal v-model="isModalVisible">
+      <div class="modal-content">
+        <h3>¡Inicio de sesión exitoso!</h3>
+        <button @click="redirectToHome" class="modal-button">Ir a Home</button>
+      </div>
+    </VueFinalModal>
   </div>
 </template>
 
 <script setup>
 import { computed, ref } from "vue";
 import { useUserStore } from '@/stores/userStore';
+import { useRouter } from 'vue-router';
+import { VueFinalModal } from 'vue-final-modal';
 
 const userStore = useUserStore();
 const username = ref('');
 const password = ref('');
 const hidePassword = ref(true);
+const isModalVisible = ref(false);
+const router = useRouter();
 
 const passwordFieldIcon = computed(() => hidePassword.value ? "fa-eye" : "fa-eye-slash");
 const passwordFieldType = computed(() => hidePassword.value ? "password" : "text");
@@ -35,15 +46,22 @@ const passwordFieldType = computed(() => hidePassword.value ? "password" : "text
 const togglePasswordVisibility = () => {
   hidePassword.value = !hidePassword.value;
 };
+if (!userStore.isAuthenticated()) {
+  router.push('/login');
+}
 
 const handleLogin = async () => {
   try {
     await userStore.login({ username: username.value, password: password.value });
-    alert('Inicio de sesión exitoso');
-    // Aquí puedes añadir redirección después del inicio de sesión
+    isModalVisible.value = true;
   } catch (error) {
     alert('Error en el inicio de sesión. Verifica tus credenciales.');
   }
+};
+
+const redirectToHome = () => {
+  isModalVisible.value = false;
+  router.push('/home');
 };
 </script>
 
@@ -54,7 +72,6 @@ const handleLogin = async () => {
   align-items: center;
   height: 100vh;
   width: 100%;
-  
   padding: 20px;
 }
 
@@ -123,6 +140,25 @@ const handleLogin = async () => {
 }
 
 .login-button:hover {
+  background-color: #2e7d32;
+}
+
+.modal-content {
+  text-align: center;
+  padding: 2rem;
+}
+
+.modal-button {
+  padding: 0.75rem;
+  background-color: #388e3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.modal-button:hover {
   background-color: #2e7d32;
 }
 </style>

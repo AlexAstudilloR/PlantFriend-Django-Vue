@@ -13,4 +13,6 @@ class Plants(models.Model):
     imagen = models.ImageField(upload_to='plants/',null=True)
     guia= models.ForeignKey(Guides,on_delete= models.CASCADE)
     created_at= models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.nombre, self.imagen
     

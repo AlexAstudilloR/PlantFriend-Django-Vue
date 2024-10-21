@@ -2,37 +2,33 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { getUserGarden, addPlantToGarden, removePlantFromGarden } from '../services/axios.garden';
 
-
 export const useGardenStore = defineStore('garden', () => {
     const garden = ref([]);
-
 
     const fetchUserGarden = async () => {
         try {
             const response = await getUserGarden();
             garden.value = response.data;
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     };
 
-    const addPlant = async (plantData) => {
+    const addPlant = async (plantaId) => {
         try {
-            await addPlantToGarden(plantData);
-            
-            await fetchUserGarden(); // Refrescar el jardín
+            await addPlantToGarden(plantaId);  // Aquí envías el plantaId
+            await fetchUserGarden();  // Refrescar el jardín
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     };
 
     const removePlant = async (plantaId) => {
         try {
             await removePlantFromGarden(plantaId);
-           
-            await fetchUserGarden(); // Refrescar el jardín
+            await fetchUserGarden();  // Refrescar el jardín
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     };
 
