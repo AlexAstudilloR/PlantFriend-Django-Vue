@@ -15,6 +15,7 @@ export const useUserStore = defineStore('user', () => {
     try {
       const response = await registerUser(userData);
       user.value = response.data.user;
+      token.value = response.data.token;
     } catch (error) {
       console.error('Error en el registro:', error);
       throw error;

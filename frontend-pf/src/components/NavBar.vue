@@ -63,7 +63,7 @@ const logout = () => {
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
-  background-color: #0ba34a;
+  background-color: #319b5d;
   color: #ecf0f1;
 }
 

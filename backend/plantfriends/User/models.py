@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 
 class CustomUserManager(BaseUserManager):
+   
     def create_user(self, username, email, password=None, **extra_fields):
         if not email:
             raise ValueError('El email es obligatorio')
@@ -29,8 +30,8 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser):
     username = models.CharField(max_length=10, unique=True)
     email = models.EmailField(unique=True)
-    nombre = models.CharField(max_length=20, default='a')
-    telefono = models.CharField(max_length=10, blank=True, default=0)
+    nombre = models.CharField(max_length=50, default='')  # Aumentado el tamaño del campo
+    telefono = models.CharField(max_length=15, blank=True, default='')  # Cambiado a string vacío por defecto
     created_at = models.DateTimeField(auto_now_add=True)
 
     # Campos necesarios para el superusuario

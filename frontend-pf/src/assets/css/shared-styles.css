@@ -1,112 +1,16 @@
-<script setup>
-import { ref } from 'vue';
-import { useUserStore } from '@/stores/userStore';
-
-
-const userStore = useUserStore();
-
-const username = ref('');
-const nombre = ref('');
-const email = ref('');
-const telefono = ref('');
-const password = ref('');
-const isModalVisible = ref(false);
-
-const handleRegister = async () => {
-  try {
-    await userStore.register({ 
-      nombre: nombre.value,
-      username: username.value,
-      email: email.value,
-      telefono: telefono.value,
-      password: password.value 
-    });
-    isModalVisible.value = true; // Mostrar el modal
-  } catch (error) {
-    alert('Error en el registro. Verifica tus datos.');
-  }
-};
-
-
-</script>
-<template>
-  <div class="split-screen">
-    <div class="left">
-      <section class="copy">
-        <h1>La naturaleza a tu alcance.</h1>
-        <p>El jardín de tus sueños, en la palma de tu mano.</p>
-      </section>
-    </div>
-    <div class="right">
-      <form @submit.prevent="handleRegister">
-        <section class="copy">
-          <h2>Sign Up</h2>
-          <div class="login-container">
-            <p>¿Ya tienes cuenta? <router-link to="/login">Log In</router-link></p>
-          </div>
-          
-          <div class="input-container name">
-            <label for="username">Nombre de usuario</label>
-            <input type="text" id="username" v-model="username" name="username" />
-          </div>
-
-          <div class="input-container name">
-            <label for="telefono">Teléfono</label>
-            <input type="tel" id="telefono" v-model="telefono" name="telefono" />
-          </div>
-
-          <div class="input-container name">
-            <label for="nombre">Nombre completo</label>
-            <input type="text" id="nombre" v-model="nombre" name="nombre" />
-          </div>
-
-          <div class="input-container email">
-            <label for="email">Email</label>
-            <input type="email" id="email" v-model="email" name="email" />
-          </div>
-
-          <div class="input-container password">
-            <label for="password">Password</label>
-            <input
-              id="password"
-              v-model="password"
-              name="password"
-              placeholder="Debe tener al menos 6 caracteres"
-              type="password"
-            />
-          </div>
-          
-          <button class="signup-btn" type="submit">Sign Up</button>
-          <section class="copy legal">
-            <p>
-              <span class="small">
-                Al continuar, aceptas nuestra <br />
-                <a href="#">Política de Privacidad</a> &amp; <a href="#">Términos de Servicio</a>.
-              </span>
-            </p>
-          </section>
-        </section>
-      </form>
-    </div>
-  </div>
-
-</template>
-
-
-<style scoped>
 a {
     text-decoration: none;
     color: white;
   }
   
   h1 {
-    font-size: 2rem;
+    font-size: 2.25rem;
     font-weight: 700;
   }
   
   h2 {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 700;
   }
   
   a {
@@ -117,7 +21,7 @@ a {
   a:hover {
     text-decoration: underline;
   }
-
+  
   .small {
     font-size: 80%;
     text-align: center;
@@ -129,12 +33,11 @@ a {
   }
   
   .left {
-    height: 100vh;
+    height: 200px;
   }
-
+  
   .left,
   .right {
-    margin-top: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -159,11 +62,10 @@ a {
   .right .copy {
     color: rgb(0, 0, 0);
     text-align: center;
-    
   }
   
   .right .copy p {
-    margin: 1.5rem 0;
+    margin: 1.5em 0;
     font-size: 0.875rem;
   }
   
@@ -181,14 +83,14 @@ a {
     border-radius: 8px;
     border: 1px solid #c4c4c4;
     padding: 1em;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1.25rem;
     font-size: 0.875rem;
   }
   
   label {
     display: block;
-    margin-bottom: 0.25rem;
-    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
   }
   
   .input-container.password {
@@ -283,7 +185,7 @@ a {
   @media screen and (min-width: 500px) {
     .split-screen {
       flex-direction: row;
-      height: 110vh;
+      height: 100vh;
     }
   
     .left,
@@ -294,4 +196,3 @@ a {
     }
   }
   
-</style>
