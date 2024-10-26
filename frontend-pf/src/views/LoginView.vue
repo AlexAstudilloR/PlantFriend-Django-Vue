@@ -60,7 +60,7 @@ const userStore = useUserStore()
 const username = ref('')
 const password = ref('')
 const hidePassword = ref(true)
-const isModalVisible = ref(false)
+
 const router = useRouter()
 
 const passwordFieldType = computed(() => (hidePassword.value ? 'password' : 'text'))
@@ -72,7 +72,7 @@ if (!userStore.isAuthenticated()) {
 const handleLogin = async () => {
   try {
     await userStore.login({ username: username.value, password: password.value })
-    isModalVisible.value = true
+    router.push('/home')
   } catch (error) {
     alert('Error en el inicio de sesión. Verifica tus credenciales.')
   }
