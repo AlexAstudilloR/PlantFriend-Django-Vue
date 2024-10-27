@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Plants,Category
 from .serializers import PlantsSerializer, CategorySerializer
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
 
 class PlantsListCreateView(generics.ListCreateAPIView):
     queryset = Plants.objects.all()
@@ -43,8 +45,13 @@ class PlantsSearchByNameView(generics.ListAPIView):
     filter_backends = [filters.SearchFilter]  # Habilitamos la búsqueda
     search_fields = ['nombre']  # Campo de búsqueda: 'name'
 
-class PlantsFilterByCategoryView(generics.ListAPIView):
-    queryset = Plants.objects.all()
-    serializer_class = PlantsSerializer
-    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]  # Habilitamos los filtros
-    filterset_fields = ['categoria']  # Campo para filtrar: 'category'
+class PlantsFilterByCategoryView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request, category):
+        if category == "all":
+            plants = Plants.objects.all()
+        else:
+            plants = Plants.objects.filter(categoria__name=category)  # Ajusta el filtro según el campo de categoría en tu modelo
+
+        serializer = PlantsSerializer(plants, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

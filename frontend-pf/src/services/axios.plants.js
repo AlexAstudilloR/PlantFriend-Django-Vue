@@ -38,5 +38,5 @@ export const searchPlantsByName = (name) => {
 
 // Filtrar plantas por categoría
 export const filterPlantsByCategory = (categoryId) => {
-  return apiClient.get(`${API_URL}filtrar/`, { params: { category: categoryId } });
+  return apiClient.get(`${API_URL}filtrar/${categoryId}/`);
 };

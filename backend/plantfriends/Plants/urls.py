@@ -15,5 +15,5 @@ urlpatterns = [
     path('categoria/crear/', CategoryCreateView.as_view(), name='category-list-create'),  # Crear categoría
     path('categoria/', CategoryListCreateView.as_view(), name='category-list-show'),  # Listar categorías
     path('buscar/', PlantsSearchByNameView.as_view(), name='plants-search-by-name'),  # Buscar plantas por nombre
-    path('filtrar/', PlantsFilterByCategoryView.as_view(), name='plants-filter-by-category'),  # Filtrar plantas por categoría
+    path('filtrar/<str:category>/', PlantsFilterByCategoryView.as_view(), name='plants-filter-by-category'),  # Filtrar plantas por categoría
 ]

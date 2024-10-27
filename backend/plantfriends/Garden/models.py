@@ -4,10 +4,10 @@ from plantfriends.User.models import CustomUser
 from plantfriends.Guides.models import Guides
 
 
-class Garden(models.Model):
-    usuario = models.ForeignKey(CustomUser, on_delete=models.CASCADE) 
-    planta = models.ForeignKey(Plants, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    def __str__(self):
-        return f"{self.usuario.nombre} - {self.planta.nombre}"
 
+class Garden(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='garden', default='')
+    plants = models.ManyToManyField(Plants, related_name='gardens', blank=True)
+
+    def __str__(self):
+        return f"Jardín de {self.user.username}"

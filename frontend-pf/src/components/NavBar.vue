@@ -30,11 +30,11 @@
 import { ref, computed } from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import {  faUser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import {  faUser, faSignOutAlt , faBars} from '@fortawesome/free-solid-svg-icons';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
 
-library.add( faUser, faSignOutAlt);
+library.add( faUser, faSignOutAlt, faBars);
 
 const isMenuOpen = ref(false);
 const toggleMenu = () => {

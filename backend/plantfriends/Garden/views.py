@@ -1,35 +1,45 @@
-from rest_framework import generics
-from plantfriends.Garden.models import Garden
-from .serializer import GardenSerializer
+from rest_framework import generics, status
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
+from plantfriends.Garden.serializer import GardenSerializer
+from plantfriends.Garden.models import Garden
 from plantfriends.Plants.models import Plants
+from plantfriends.User.models import CustomUser
 # Listar el jardín del usuario autenticado
 class UserGardenList(generics.ListAPIView):
     serializer_class = GardenSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        return Garden.objects.filter(usuario=user)
+        # Retorna el jardín del usuario autenticado
+        return Garden.objects.filter(user=self.request.user)
 
-# Agregar una planta al jardín del usuario
-class AddToGarden(generics.CreateAPIView):
+class AddToGarden(generics.UpdateAPIView):
     serializer_class = GardenSerializer
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        planta_id = self.kwargs['planta_id']  # Obtener la ID de la planta desde la URL
-        planta = get_object_or_404(Plants, id=planta_id)  # Buscar la planta por su ID
-        serializer.save(usuario=self.request.user, planta=planta)  # Guardar el jardín con la planta específica
+    def post(self, request, *args, **kwargs):
+        garden, created = Garden.objects.get_or_create(user=request.user)
+        plant_id = request.data.get("plant_id")
+        
+        try:
+            plant = Plants.objects.get(id=plant_id)
+            garden.plants.add(plant)
+            return Response({"message": "Planta agregada al jardín."}, status=status.HTTP_200_OK)
+        except Plants.DoesNotExist:
+            return Response({"error": "Planta no encontrada."}, status=status.HTTP_404_NOT_FOUND)
 
-
-# Eliminar una planta del jardín del usuario
-class RemoveFromGarden(generics.DestroyAPIView):
+class RemoveFromGarden(generics.UpdateAPIView):
     serializer_class = GardenSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_object(self):
-        user = self.request.user
-        planta_id = self.kwargs['planta_id']  # Obtener la ID de la planta desde la URL
-        return get_object_or_404(Garden, usuario=user, planta_id=planta_id)
+    def delete(self, request, *args, **kwargs):
+        garden, created = Garden.objects.get_or_create(user=request.user)
+        plant_id = kwargs.get("plant_id")
+
+        try:
+            plant = Plants.objects.get(id=plant_id)
+            garden.plants.remove(plant)
+            return Response({"message": "Planta eliminada del jardín."}, status=status.HTTP_200_OK)
+        except Plants.DoesNotExist:
+            return Response({"error": "Planta no encontrada."}, status=status.HTTP_404_NOT_FOUND)

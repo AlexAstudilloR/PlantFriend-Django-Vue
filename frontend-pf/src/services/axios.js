@@ -12,9 +12,10 @@ apiClient.interceptors.request.use((config) => {
   console.log("Token en localStorage:", token);
 
   // Evitar agregar el token en rutas de registro o inicio de sesión
-  const authRoutes = ['/auth/usuario/register/', '/auth/usuario/login/','/auth/plantas/','/auth/plantas/categoria/'];
-  if (token && !authRoutes.includes(config.url)) {
-    config.headers['Authorization'] = `Bearer ${token}`; // Incluye el token en cada solicitud excepto en las rutas de autenticación
+  const authRequiredRoutes = [ '/auth/garden/']; // Agrega aquí las rutas que necesitan token
+
+  if (token && authRequiredRoutes.some(route => config.url.startsWith(route))) {
+    config.headers['Authorization'] = `Bearer ${token}`; // Incluye el token solo en las rutas que requieren autenticación
   }
   return config;
 }, (error) => {
