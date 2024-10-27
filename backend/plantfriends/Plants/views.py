@@ -46,12 +46,11 @@ class PlantsSearchByNameView(generics.ListAPIView):
     search_fields = ['nombre']  # Campo de búsqueda: 'name'
 
 class PlantsFilterByCategoryView(APIView):
-    permission_classes = [AllowAny]
     def get(self, request, category):
         if category == "all":
             plants = Plants.objects.all()
         else:
-            plants = Plants.objects.filter(categoria__name=category)  # Ajusta el filtro según el campo de categoría en tu modelo
+            plants = Plants.objects.filter(categoria__name=category)
 
-        serializer = PlantsSerializer(plants, many=True)
+        serializer = PlantsSerializer(plants, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -30,11 +30,11 @@
   const emit = defineEmits(['view-guide', 'add-to-garden']);
   
   // Computed para la imagen de la planta
-  const BASE_URL = 'http://localhost:8000'; // Cambia esto a la URL de tu backend en producción
+// Cambia esto a la URL de tu backend en producción
 
 const plantImage = computed(() => {
   // Si la imagen es una ruta relativa, construye la URL completa
-  return props.plant.imagen ? props.plant.imagen : `${BASE_URL}${props.plant.imagen}`;
+  return props.plant.imagen ? props.plant.imagen : console.log("Hola");
 });
   
   // Métodos para los eventos
