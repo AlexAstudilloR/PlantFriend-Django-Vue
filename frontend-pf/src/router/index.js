@@ -5,6 +5,7 @@ import HomeView from '@/views/HomeView.vue'
 import PlantView from '@/views/PlantView.vue'
 import MapView from '@/views/MapView.vue'
 import GardenView from '@/views/GardenView.vue'
+import ScanView from '@/views/ScanView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -41,7 +42,12 @@ const router = createRouter({
       path: '/my-garden',
       name: 'garden',
       component: GardenView
-    }
+    },
+    {
+      path: '/scan',
+      name: 'scan',
+    component: ScanView    }
+
   ]
 })
 

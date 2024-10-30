@@ -5,7 +5,7 @@
       <p>Categoría: {{ plant.categoria }}</p>
       <button class="boton-guia" @click="viewGuide(plant.guideId)">Ver Guía</button>
       <button @click="addToGarden">
-        <font-awesome-icon :icon="['fas', 'circle-plus']" />
+        <font-awesome-icon class="plus" :icon="['fas', 'circle-plus']" />
       </button>
     </div>
   </template>
@@ -48,26 +48,8 @@ const plantImage = computed(() => {
   </script>
   
   <style scoped>
-  /* Estilos generales */
-body {
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 0;
-    
-}
 
-a{
-    text-decoration: none;
-    color: white;
-}
 
-.plant-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    padding: 20px;
-    position: relative;
-}
 
 .plant-card {
     border: 1px solid #fffdfd;
@@ -95,6 +77,8 @@ button {
     font-size: 16px;
     border-radius: 4px;
     cursor: pointer;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 .boton-guia{
     margin-bottom: 5px;

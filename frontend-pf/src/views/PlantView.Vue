@@ -10,27 +10,34 @@
         @input="searchPlants"
       />
       <div class="filter-dropdown">
-        <button class="filter-button">
-          Filtrar <font-awesome-icon :icon="['fas', 'filter']" /> 
+        <button class="filter-button" @click="toggleDropdown">
+          Filtrar <font-awesome-icon class="icon" :icon="['fas', 'filter']" /> 
         </button>
-          <select class="dropdown-content" id="filterOptions" v-model="selectedCategory" @change="filterByCategory">
-            <option value="">Todas las Categorías</option>
-            <option v-for="category in categories" :key="category.id" :value="category.name">
-              {{ category.name }}
-            </option>
-          </select>
+        <div v-if="isDropdownOpen" class="dropdown-content">
+          <span class="label" @click="selectCategory('')">Todas las Categorías</span>
+          <span 
+            v-for="category in categories" 
+            :key="category.id" 
+            class="label" 
+            @click="selectCategory(category.name)"
+          >
+            {{ category.name }}
+          </span>
+        </div>
       </div>
     </div>
-    
-    <!-- Lista de Plantas -->
-    <div class="plants-list">
-      <PlantsCards
-        v-for="plant in plants"
-        :key="plant.id"
-        :plant="plant"
-        @view-guide="viewGuide"
-        @add-to-garden="addToGarden"
-      />
+
+    <div class="plant-container">
+      <!-- Lista de Plantas -->
+      <div class="plants-list">
+        <PlantsCards
+          v-for="plant in plants"
+          :key="plant.id"
+          :plant="plant"
+          @view-guide="viewGuide"
+          @add-to-garden="addToGarden"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -41,18 +48,33 @@ import { usePlantsStore } from '../stores/PlantsStore';
 import { computed, onMounted, ref } from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import {faFilter} from '@fortawesome/free-solid-svg-icons'
-// Store y propiedades de estado
-library.add(faFilter)
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
+
+// Añadir ícono de filtro a la librería de FontAwesome
+library.add(faFilter);
+
 const plantsStore = usePlantsStore();
 const searchQuery = ref('');
 const selectedCategory = ref('');
+const isDropdownOpen = ref(false); // Estado para controlar el dropdown
 
 // Cargar las plantas y categorías al montar el componente
 onMounted(() => {
   plantsStore.fetchPlants();
   plantsStore.fetchCategories();
 });
+
+// Función para alternar la visibilidad del dropdown
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value;
+};
+
+// Función para seleccionar la categoría
+const selectCategory = async (category) => {
+  selectedCategory.value = category;
+  isDropdownOpen.value = false; // Cerrar el dropdown
+  await filterByCategory();
+};
 
 // Función para buscar plantas
 const searchPlants = async () => {
@@ -79,7 +101,6 @@ const viewGuide = (guideId) => {
 
 const addToGarden = (plantId) => {
   console.log(`Agregar planta con ID: ${plantId} al jardín`);
-  // Aquí podrías llamar a una función en la store o enviar una solicitud a la API para agregar la planta al jardín
 };
 
 // Computed properties para los datos de la store
@@ -89,6 +110,7 @@ const categories = computed(() => plantsStore.categories);
 </script>
 
 <style>
+
 a{
     text-decoration: none;
     color: white;
@@ -165,7 +187,7 @@ button {
     border-radius: 4px;
 }
 
-.filter-button i {
+.filter-button .icono {
     margin-right: 8px;
 }
 
@@ -180,13 +202,13 @@ button {
     border-radius: 8px;
 }
 
-.dropdown-content label {
+.dropdown-content .label {
     display: block;
     padding: 8px 16px;
     cursor: pointer;
 }
 
-.dropdown-content label:hover {
+.dropdown-content .label:hover {
     background-color: #f1f1f1;
 }
 
