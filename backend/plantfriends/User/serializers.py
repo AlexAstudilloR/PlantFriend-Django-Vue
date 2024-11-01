@@ -3,9 +3,10 @@ from .models import CustomUser
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    imagen = serializers.ImageField(use_url=True,required =False) 
     class Meta:
         model = CustomUser
-        fields = ['username', 'nombre', 'password', 'telefono', 'email', 'created_at']
+        fields = ['username', 'nombre', 'password', 'telefono', 'email', 'imagen','created_at']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -15,6 +16,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
                 email=validated_data['email'],
                 nombre=validated_data['nombre'],
                 telefono=validated_data['telefono'],
+                imagen=validated_data['imagen']
             )
             user.set_password(validated_data['password'])  # Almacena la contraseña de forma segura
             user.save()

@@ -13,7 +13,10 @@
       </ul>
       <div class="navbar-login">
         <router-link v-if="!user" to="/login" class="login-btn">
-          <FontAwesomeIcon icon="user" /> Iniciar Sesión
+           Iniciar Sesión
+        </router-link>
+        <router-link v-if="!user" to="/register" class="register-btn">
+          Registrarse
         </router-link>
         <button v-else @click="logout" class="logout-btn">
           <FontAwesomeIcon icon="sign-out-alt" /> Cerrar Sesión
