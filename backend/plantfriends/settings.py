@@ -9,7 +9,7 @@ from django.conf.urls.static import static
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5 MB, ajusta según tus necesidades
 
 SECRET_KEY = 'django-insecure-@y68gnpn682b_*7pg9ai%qr@gt2cv!hu-g=0kqg8$^o6=3d6^$'
 
@@ -62,6 +62,9 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Cambia el puerto si es necesario
     # Puedes añadir más dominios si el frontend tiene otras URL
+]
+CORS_ALLOW_HEADERS = [
+    'content-disposition', 'content-type', 'authorization', 'x-csrftoken', 'x-requested-with'
 ]
 ROOT_URLCONF = 'plantfriends.urls'
 

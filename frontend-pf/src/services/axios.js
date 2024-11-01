@@ -9,7 +9,7 @@ const apiClient = axios.create({
 // Interceptor de solicitudes para incluir el token JWT
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
-  console.log("Token en localStorage:", token);
+  
 
   // Evitar agregar el token en rutas de registro o inicio de sesión
   const authRequiredRoutes = [ '/auth/garden/']; // Agrega aquí las rutas que necesitan token

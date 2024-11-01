@@ -12,22 +12,15 @@ export const useUserStore = defineStore('user', () => {
   };
 
   const register = async (userData) => {
-    // Crear un FormData si la imagen necesita enviarse como archivo
-    const formData = new FormData();
-    formData.append('nombre', userData.nombre);
-    formData.append('username', userData.username);
-    formData.append('email', userData.email);
-    formData.append('telefono', userData.telefono);
-    formData.append('password', userData.password);
-    formData.append('imagen', userData.imagen); // archivo de imagen
-
+    console.log("Contenido de formData antes de enviar:", Object.fromEntries(userData.entries()));
+  
     try {
-      const response = await registerUser(formData); // Llamada a la función que envía los datos al backend
+      const response = await registerUser(userData); // Pasa `userData` directamente
       user.value = response.data.user;
       token.value = response.data.token;
       localStorage.setItem('token', token.value);
     } catch (error) {
-      console.error('Error en el registro:', error);
+      console.error('Error en el registro:', error.response ? error.response.data : error);
       throw error;
     }
   };
@@ -51,4 +44,4 @@ export const useUserStore = defineStore('user', () => {
   };
 
   return { user, token, isAuthenticated, register, login, logout };
-});
+}); 

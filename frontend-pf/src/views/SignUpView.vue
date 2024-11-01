@@ -22,7 +22,7 @@ const handleRegister = async () => {
   const formData = new FormData();
   formData.append('nombre', nombre.value);
   formData.append('username', username.value);
-  formData.append('email', email.value);
+  formData.append('email', email.value.trim());
   formData.append('telefono', telefono.value);
   formData.append('password', password.value);
   formData.append('imagen', imagen.value); // Archivo de imagen

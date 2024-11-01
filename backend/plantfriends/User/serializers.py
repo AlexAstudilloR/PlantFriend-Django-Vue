@@ -1,14 +1,21 @@
+import re
+from django.forms import ValidationError
 from rest_framework import serializers
 from .models import CustomUser
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class CustomUserSerializer(serializers.ModelSerializer):
     imagen = serializers.ImageField(use_url=True,required =False) 
+    email= serializers.EmailField()
     class Meta:
         model = CustomUser
         fields = ['username', 'nombre', 'password', 'telefono', 'email', 'imagen','created_at']
         extra_kwargs = {'password': {'write_only': True}}
-
+    def validate_email(self, value):
+        email_pattern = re.compile(r'^[\w\.-]+@[\w\.-]+\.\w+$')
+        if not email_pattern.match(value):
+            raise ValidationError("Por favor, ingresa una dirección de correo válida.")
+        return value
     def create(self, validated_data):
         try:
             user = CustomUser(
