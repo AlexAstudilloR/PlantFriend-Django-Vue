@@ -17,4 +17,4 @@ class PlantsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Plants
-        fields = ['id', 'nombre', 'categoria', 'imagen', 'guia', 'created_at']
+        fields = ['id', 'nombre', 'categoria', 'imagen', 'guia', 'nombre_cientifico','created_at']

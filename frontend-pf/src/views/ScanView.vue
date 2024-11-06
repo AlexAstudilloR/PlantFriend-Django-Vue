@@ -1,74 +1,108 @@
+<script setup>
+import { ref, computed } from 'vue';
+import { useScanStore } from '../stores/scanStore';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { storeToRefs } from 'pinia';
+import ModalResults from '../components/ModalResults.vue';
+
+library.add(faCloudArrowUp);
+
+const fileInput = ref(null); 
+const fileName = ref(''); 
+const imagePreview = ref(null); 
+const selectedFile = ref(null); // Nueva referencia para almacenar el archivo seleccionado
+const showModal = ref(false); // Nueva variable para controlar la visibilidad del modal
+
+const scanStore = useScanStore();
+const { scanResult, loading, error } = storeToRefs(scanStore);
+const nombreCientifico = computed(() => scanResult.value?.nombre_cientifico || 'Desconocido');
+const nombreComun = computed(() => scanResult.value?.nombre_comun || 'No disponible');
+const probabilidad = computed(() => scanResult.value?.probabilidad || 'N/A');
+
+const triggerFileInput = () => {
+  fileInput.value.click();
+};
+
+const handleImageUpload = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    fileName.value = file.name; 
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      imagePreview.value = e.target.result; 
+    };
+    reader.readAsDataURL(file);
+
+    selectedFile.value = file; // Asigna el archivo a `selectedFile`
+    scanStore.clearScanResult();
+  }
+};
+
+const submitImage = async () => {
+  if (selectedFile.value) {
+    await scanStore.scanImage(selectedFile.value); // Envia la imagen al store
+    showModal.value = true; // Mostrar el modal después de enviar la imagen
+  } else {
+    console.log('No se ha seleccionado una imagen');
+  }
+};
+</script>
 <template>
-    <div class="box">
-      <h2 class="title">Cargar Imagen</h2>
-      <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
-        <!-- Input de carga de imagen oculto -->
-        <input 
-          type="file" 
-          id="real-file" 
-          ref="fileInput" 
-          @change="handleImageUpload" 
-          accept="image/*" 
-          hidden 
-        />
-        <!-- Botón personalizado para cargar imagen -->
-        <button type="button" id="custom-button" @click="triggerFileInput">
-          <font-awesome-icon :icon="['fas', 'cloud-arrow-up']" />
-          <strong> CARGAR FOTO</strong>
-        </button>
-        <span id="custom-text">{{ fileName || 'No file chosen, yet.' }}</span>
-        <br>
-        <!-- Contenedor de previsualización de imagen -->
-        <div v-if="imagePreview" id="image-preview-container" class="box-preview">
-          <img :src="imagePreview" alt="Vista previa de la imagen" id="image-preview" />
-        </div>
-        <button class="boton" type="submit">Enviar</button>
-      </form>
+  <div class="box">
+    <h2 class="title">Cargar Imagen</h2>
+    <input 
+      type="file" 
+      id="real-file" 
+      ref="fileInput" 
+      @change="handleImageUpload" 
+      accept="image/*" 
+      hidden 
+    />
+    <div v-if="imagePreview" id="image-preview-container" class="box-preview">
+      <img :src="imagePreview" alt="Vista previa de la imagen" id="image-preview" />
     </div>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue';
-  import { library } from '@fortawesome/fontawesome-svg-core';
-  import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-  import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
-  
-  // Agregar el ícono a la librería
-  library.add(faCloudArrowUp);
-  
-  // Variables reactivas para el archivo y su previsualización
-  const fileInput = ref(null); // Referencia al input de archivo
-  const fileName = ref(''); // Nombre del archivo
-  const imagePreview = ref(null); // Fuente de la imagen para previsualización
-  
-  // Función para activar el input de archivo
-  const triggerFileInput = () => {
-    fileInput.value.click();
-  };
-  
-  // Función para manejar la carga de imagen
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      fileName.value = file.name; // Asigna el nombre del archivo
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        imagePreview.value = e.target.result; // Asigna la URL de previsualización
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-  
-  // Función para manejar el envío del formulario
-  const handleSubmit = () => {
-    // Aquí puedes procesar el archivo o enviar la imagen a tu API
-    console.log("Imagen enviada:", fileName.value);
-  };
-  </script>
+    <button type="button" id="custom-button" @click="triggerFileInput">
+      <font-awesome-icon :icon="['fas', 'cloud-arrow-up']" />
+      <strong> CARGAR FOTO</strong>
+    </button>
+    <span id="custom-text">{{ fileName || 'No hay ninguna imagen' }}</span>
+    <br>
+    <button class="boton" @click="submitImage">Enviar</button>
+
+    <div v-if="loading">Escaneando...</div>
+    <div v-if="error" class="error">
+      {{ error }}
+    </div>
+  </div>
+
+  <!-- Modal de Resultados -->
+  <ModalResults v-if="showModal" @close="showModal = false" title="Resultados del escaneo">
+    <div class="titleContainer">
+      <h4 class="sciName">Nombre Científico</h4>
+    </div>
+    <div v-if="imagePreview" id="image-preview-container" class="box-preview">
+      <img :src="imagePreview" alt="Vista previa de la imagen" id="image-preview" />
+    </div>
+    <p style="font-weight:500;">{{ nombreCientifico }}</p>
+    <h4>Descripción</h4>
+    <p style="text-align: center;">{{ nombreComun }}</p>
+    <h4>Probabilidad</h4>
+    <p>{{ probabilidad }}</p>
+    <button id="custom-button">Ver planta</button>
+  </ModalResults>
+</template>
+
 <style scoped>
 /* Estilo general del cuerpo */
-
-
+.titleContainer{
+  text-align: center;
+  width: 100%;
+}
+.sciName{
+  font-weight: 600;
+}
 /* Sección principal */
 .scanner-section {
     text-align: center;
@@ -108,50 +142,54 @@
     width: 90px;
     height: 35px;
     border-radius: 3px;
-    background-color: #23bd2b;
+    background-color: #4CAF50;
     font-family: 'Poppins', sans-serif;
     cursor: pointer;
     border: none;
     color: white;
+    border-radius: 10px;
+    align-content: center;
     
    
 }
 
 .boton:hover {
     color: #ffffff;
-    background-color: #1b9b48;
+    background-color: #157436;
 }
 
 /* Estilos de la caja principal */
 .box {
-    background-color: rgb(238, 238, 238);
+    background-color: rgb(235, 255, 227);
     padding: 25px;
     text-align: center;
     width: 50%;
     max-width: 400px;
     box-sizing: border-box;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     margin: 50px auto; /* Centramos la caja */
-    border-radius: 20px;
+    border-radius: 15px;
 }
 
 /* Título */
 .title {
     margin-bottom: 20px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    color: #3a3a3a;
 }
 
 /* Botón de carga personalizada */
 #custom-button {
     padding: 10px;
     color: white;
-    background-color: #007400;
-    border: 1px solid #000;
+    background-color: #21863a;
     border-radius: 5px;
     cursor: pointer;
 }
 
 #custom-button:hover {
-    background-color: #025913;
+    background-color: #117725;
 }
 
 /* Texto cuando no hay archivo seleccionado */
@@ -164,8 +202,10 @@
 /* Previsualización de imagen */
 #image-preview {
     height: 200px;
-    width: 175px;
-    margin-top: 10px;
+    width: 200px;
+    margin-bottom: 10px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    border-radius: 10px;
 }
 
 /* Responsive Design */

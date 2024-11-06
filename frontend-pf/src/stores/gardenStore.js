@@ -1,41 +1,44 @@
+// gardenStore.js
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { getUserGarden, addPlantToGarden, removePlantFromGarden } from '../services/axios.garden';
+import { fetchUserGarden, addPlantToGarden, removePlantFromGarden } from '../services/axios.garden';
 
 export const useGardenStore = defineStore('garden', () => {
-    const garden = ref([]);
+  const garden = ref([]);
+  const loading = ref(false);
 
-    const fetchUserGarden = async () => {
-        try {
-            const response = await getUserGarden();
-            garden.value = response.data;
-        } catch (error) {
-            console.log(error);
-        }
-    };
+  // Obtener el jardín del usuario
+  const getGarden = async () => {
+    loading.value = true;
+    try {
+      const response = await fetchUserGarden();
+      garden.value = response.data.plants; // Asigna las plantas en el jardín al estado
+    } catch (error) {
+      console.error('Error al obtener el jardín:', error);
+    } finally {
+      loading.value = false;
+    }
+  };
 
-    const addPlant = async (plantaId) => {
-        try {
-            await addPlantToGarden(plantaId);  // Aquí envías el plantaId
-            await fetchUserGarden();  // Refrescar el jardín
-        } catch (error) {
-            console.log(error);
-        }
-    };
+  // Agregar una planta al jardín
+  const addPlant = async (plantId) => {
+    try {
+      await addPlantToGarden(plantId);
+      await getGarden(); // Recargar el jardín después de agregar la planta
+    } catch (error) {
+      console.error('Error al agregar la planta:', error);
+    }
+  };
 
-    const removePlant = async (plantaId) => {
-        try {
-            await removePlantFromGarden(plantaId);
-            await fetchUserGarden();  // Refrescar el jardín
-        } catch (error) {
-            console.log(error);
-        }
-    };
+  // Eliminar una planta del jardín
+  const removePlant = async (plantId) => {
+    try {
+      await removePlantFromGarden(plantId);
+      await getGarden(); // Recargar el jardín después de eliminar la planta
+    } catch (error) {
+      console.error('Error al eliminar la planta:', error);
+    }
+  };
 
-    return {
-        garden,
-        fetchUserGarden,
-        addPlant,
-        removePlant,
-    };
+  return { garden, loading, getGarden, addPlant, removePlant };
 });

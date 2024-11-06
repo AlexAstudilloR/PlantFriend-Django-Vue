@@ -12,7 +12,7 @@ export const useUserStore = defineStore('user', () => {
   };
 
   const register = async (userData) => {
-    console.log("Contenido de formData antes de enviar:", Object.fromEntries(userData.entries()));
+    
   
     try {
       const response = await registerUser(userData); // Pasa `userData` directamente
@@ -28,11 +28,12 @@ export const useUserStore = defineStore('user', () => {
   const login = async (userData) => {
     try {
       const response = await loginUser(userData);
-      token.value = response.data.access;
+      console.log("Respuesta del servidor en login:", response.data); // Verifica la estructura de datos
+      user.value = response.data.user; // Asegúrate de que response.data.user sea correcto
+      token.value = response.data.access; // Asegúrate de que el token esté en response.data.access
       localStorage.setItem('token', token.value);
-      user.value = response.data.user;
     } catch (error) {
-      console.error('Error en el login:', error);
+      console.error('Error en el login:', error.response ? error.response.data : error);
       throw error;
     }
   };

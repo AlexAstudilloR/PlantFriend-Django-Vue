@@ -1,18 +1,16 @@
-import apiClient from './axios'; // Instancia configurada de axios con token y CORS
-
-const API_URL = '/auth/garden/';
+import apiClient from './axios';
 
 // Obtener el jardín del usuario autenticado
-export const getUserGarden = () => {
-  return apiClient.get(API_URL);
+export const fetchUserGarden = async () => {
+  return await apiClient.get('/auth/garden/');
 };
 
 // Agregar una planta al jardín
-export const addPlantToGarden = (plantaId) => {
-  return apiClient.post(`${API_URL}add/${plantaId}/`, {});  // Pasar el plantaId en la URL
+export const addPlantToGarden = async (plantId) => {
+  return await apiClient.post('/auth/garden/add/', { plant_id: plantId });
 };
 
 // Eliminar una planta del jardín
-export const removePlantFromGarden = (plantaId) => {
-  return apiClient.delete(`${API_URL}remove/${plantaId}/`);
+export const removePlantFromGarden = async (plantId) => {
+  return await apiClient.delete(`/auth/garden/remove/${plantId}/`);
 };

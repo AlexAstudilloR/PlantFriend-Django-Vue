@@ -39,11 +39,23 @@ class CategoryCreateView(generics.CreateAPIView):
 class CategoryListCreateView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+
+### VISTAS DE BUSQUEDA
+### BUSQUEDA DE PLANTAS POR NOMBRE COMÚN 
 class PlantsSearchByNameView(generics.ListAPIView):
     queryset = Plants.objects.all()
     serializer_class = PlantsSerializer
     filter_backends = [filters.SearchFilter]  # Habilitamos la búsqueda
     search_fields = ['nombre']  # Campo de búsqueda: 'name'
+
+
+### BUSQUEDA DE PLANTAS POR NOMBRE CIENTIFICO
+class PlantsSearchByScientificNameView(generics.ListAPIView):
+    queryset = Plants.objects.all()
+    serializer_class = PlantsSerializer
+    filter_backends = [filters.SearchFilter]  # Habilitamos la búsqueda
+    search_fields = ['nombre_cientifico']  # Campo de búsqueda: 'nombre_cientifico'
 
 class PlantsFilterByCategoryView(APIView):
     def get(self, request, category):

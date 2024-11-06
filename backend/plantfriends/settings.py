@@ -5,7 +5,6 @@ from decouple import config
 from django.conf import settings
 from django.conf.urls.static import static
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -18,6 +17,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+PLANT_API_KEY= config('API_KEY')
 
 # Application definition
 
@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'plantfriends.Plants.apps.PlantsConfig',
     'plantfriends.Guides.apps.GuidesConfig',
     'plantfriends.Garden.apps.GardenConfig',
+    'plantfriends.Scan.apps.ScanConfig',
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',

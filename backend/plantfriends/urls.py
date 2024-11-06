@@ -9,6 +9,7 @@ urlpatterns = [
     path('api/auth/guias/',include('plantfriends.Guides.urls')),
     path('api/auth/usuario/',include('plantfriends.User.urls')),
     path('api/auth/garden/', include('plantfriends.Garden.urls')),
+    path('api/auth/scan/', include('plantfriends.Scan.urls'))
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

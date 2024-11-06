@@ -1,50 +1,7 @@
-<template>
-  <div>
-    <!-- Campo de búsqueda y selección de categoría -->
-    <div class="search-filter-container">
-      <input
-        type="text"
-        id="searchBar"
-        placeholder="Buscar por nombre de planta..."
-        v-model="searchQuery"
-        @input="searchPlants"
-      />
-      <div class="filter-dropdown">
-        <button class="filter-button" @click="toggleDropdown">
-          Filtrar <font-awesome-icon class="icon" :icon="['fas', 'filter']" /> 
-        </button>
-        <div v-if="isDropdownOpen" class="dropdown-content">
-          <span class="label" @click="selectCategory('')">Todas las Categorías</span>
-          <span 
-            v-for="category in categories" 
-            :key="category.id" 
-            class="label" 
-            @click="selectCategory(category.name)"
-          >
-            {{ category.name }}
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <div class="plant-container">
-      <!-- Lista de Plantas -->
-      <div class="plants-list">
-        <PlantsCards
-          v-for="plant in plants"
-          :key="plant.id"
-          :plant="plant"
-          @view-guide="viewGuide"
-          @add-to-garden="addToGarden"
-        />
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import PlantsCards from '../components/plants/PlantsCards.vue';
 import { usePlantsStore } from '../stores/PlantsStore';
+import { useGardenStore } from '../stores/gardenStore'; 
 import { computed, onMounted, ref } from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -54,6 +11,7 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons';
 library.add(faFilter);
 
 const plantsStore = usePlantsStore();
+const gardenStore = useGardenStore();
 const searchQuery = ref('');
 const selectedCategory = ref('');
 const isDropdownOpen = ref(false); // Estado para controlar el dropdown
@@ -99,15 +57,64 @@ const viewGuide = (guideId) => {
   console.log(`Ver guía con ID: ${guideId}`);
 };
 
-const addToGarden = (plantId) => {
-  console.log(`Agregar planta con ID: ${plantId} al jardín`);
+const addToGarden = async (plantId) => {
+  try {
+    await gardenStore.addPlant(plantId); // Llama a la acción del store para añadir al jardín
+    console.log(`Planta con ID: ${plantId} añadida al jardín`);
+  } catch (error) {
+    console.error('Error al añadir la planta al jardín:', error);
+  }
 };
-
 // Computed properties para los datos de la store
 const plants = computed(() => plantsStore.plants);
 const categories = computed(() => plantsStore.categories);
 
 </script>
+<template>
+  <div>
+    <!-- Campo de búsqueda y selección de categoría -->
+    <div class="search-filter-container">
+      <input
+        type="text"
+        id="searchBar"
+        placeholder="Buscar por nombre de planta..."
+        v-model="searchQuery"
+        @input="searchPlants"
+      />
+      <div class="filter-dropdown">
+        <button class="filter-button" @click="toggleDropdown">
+          Filtrar <font-awesome-icon class="icon" :icon="['fas', 'filter']" /> 
+        </button>
+        <div v-if="isDropdownOpen" class="dropdown-content">
+          <span class="label" @click="selectCategory('')">Todas las Categorías</span>
+          <span 
+            v-for="category in categories" 
+            :key="category.id" 
+            class="label" 
+            @click="selectCategory(category.name)"
+          >
+            {{ category.name }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="plant-container">
+      <!-- Lista de Plantas -->
+      <div class="plants-list">
+        <PlantsCards
+          v-for="plant in plants"
+          :key="plant.id"
+          :plant="plant"
+          @view-guide="viewGuide"
+          @add-to-garden="addToGarden"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+
+
 
 <style>
 

@@ -5,11 +5,12 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'vue3-toastify';
+import { useRoute } from 'vue-router'
 // Agregar el ícono a la librería
 library.add(faCloudArrowUp)
 
 const userStore = useUserStore()
-
+const router= useRoute()
 const username = ref('')
 const nombre = ref('')
 const email = ref('')
@@ -40,6 +41,7 @@ function notify(){
     toast.success('Usuario creado correctamente',{
       position: toast.POSITION.BOTTOM_RIGHT,
     })
+    router.push('/login')
   } catch (error) {
     
       notify()

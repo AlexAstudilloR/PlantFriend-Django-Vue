@@ -15,9 +15,6 @@
         <router-link v-if="!user" to="/login" class="login-btn">
            Iniciar Sesión
         </router-link>
-        <router-link v-if="!user" to="/register" class="register-btn">
-          Registrarse
-        </router-link>
         <button v-else @click="logout" class="logout-btn">
           <FontAwesomeIcon icon="sign-out-alt" /> Cerrar Sesión
         </button>
@@ -30,14 +27,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import {  faUser, faSignOutAlt , faBars} from '@fortawesome/free-solid-svg-icons';
+import { faUser, faSignOutAlt, faBars } from '@fortawesome/free-solid-svg-icons';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
 
-library.add( faUser, faSignOutAlt, faBars);
+library.add(faUser, faSignOutAlt, faBars);
 
 const isMenuOpen = ref(false);
 const toggleMenu = () => {
@@ -53,9 +50,12 @@ const logout = () => {
 
 const route = useRoute();
 const isAuthRoute = computed(() => ['login', 'register'].includes(route.name));
+
+// Observa los cambios en `user`
+watch(user, (newUser) => {
+  console.log('Cambio de usuario:', newUser);
+});
 </script>
-
-
 <style >
 @import url('../assets/css/navbarHome.css');
 </style>

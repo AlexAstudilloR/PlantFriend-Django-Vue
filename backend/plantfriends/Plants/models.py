@@ -9,6 +9,7 @@ class Category(models.Model):
 # Create your models here.
 class Plants(models.Model):
     nombre= models.CharField(max_length=20)
+    nombre_cientifico= models.CharField(max_length=30, blank=True, null=True)
     categoria = models.ForeignKey(Category, on_delete=models.CASCADE)
     imagen = models.ImageField(upload_to='plants/',null=True)
     guia= models.ForeignKey(Guides,on_delete= models.CASCADE)
