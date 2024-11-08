@@ -1,51 +1,53 @@
+<script setup>
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { computed, defineProps, defineEmits } from 'vue';
+
+library.add(faCirclePlus);
+
+const props = defineProps({
+  plant: {
+    type: Object,
+    required: true,
+  },
+});
+
+const emit = defineEmits(['view-guide', 'add-to-garden']);
+
+const plantImage = computed(() => {
+  return props.plant.imagen || '/path/to/default-image.jpg';
+});
+
+const viewGuide = () => {
+  const guideId = props.plant.guia;  // Asegúrate de que props.plant tenga el campo guia
+  console.log(guideId);  // Esto ayudará a verificar si el guideId es correcto
+  if (guideId) {
+    emit("view-guide", guideId);
+  } else {
+    console.error('La guía no está disponible para esta planta.');
+  }
+};
+
+const addToGarden = () => {
+  emit("add-to-garden", props.plant.id);
+};
+</script>
+
+
 <template>
     <div class="plant-card" :data-category="plant.category">
       <img :src="plantImage" :alt="plant.nombre" />
       <h3>{{ plant.nombre }}</h3>
       <p>Categoría: {{ plant.categoria }}</p>
-      <button class="boton-guia" @click="viewGuide(plant.guideId)">Ver Guía</button>
+      <button class="boton-guia" @click="viewGuide(plant.guideId)">Ver más</button>
       <button @click="addToGarden">
         <font-awesome-icon class="plus" :icon="['fas', 'circle-plus']" />
       </button>
     </div>
   </template>
   
-  <script setup>
-  import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-  import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
-  import { library } from '@fortawesome/fontawesome-svg-core';
-  import { computed, defineProps, defineEmits } from 'vue';
   
-  // Añadir el icono a la librería de FontAwesome localmente en este componente
-  library.add(faCirclePlus);
-  
-  // Definir propiedades y eventos
-  const props = defineProps({
-    plant: {
-      type: Object,
-      required: true,
-    },
-  });
-  
-  const emit = defineEmits(['view-guide', 'add-to-garden']);
-  
-  // Computed para la imagen de la planta
-// Cambia esto a la URL de tu backend en producción
-
-const plantImage = computed(() => {
-  // Si la imagen es una ruta relativa, construye la URL completa
-  return props.plant.imagen ? props.plant.imagen : console.log("Hola");
-});
-  
-  // Métodos para los eventos
-  const viewGuide = (guideId) => {
-    emit("view-guide", guideId);
-  };
-  
-  const addToGarden = () => {
-    emit("add-to-garden", props.plant.id);
-  };
-  </script>
   
   <style scoped>
 

@@ -6,6 +6,7 @@ import PlantView from '@/views/PlantView.vue'
 import MapView from '@/views/MapView.vue'
 import GardenView from '@/views/GardenView.vue'
 import ScanView from '@/views/ScanView.vue'
+import GuideView from '@/views/GuideView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -46,8 +47,14 @@ const router = createRouter({
     {
       path: '/scan',
       name: 'scan',
-    component: ScanView    }
-
+      component: ScanView
+    },
+    {
+      path: '/guide/:id',
+      name: 'guide',
+      component: GuideView,
+      props: true
+    }
   ]
 })
 

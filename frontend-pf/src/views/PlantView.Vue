@@ -1,22 +1,24 @@
 <script setup>
 import PlantsCards from '../components/plants/PlantsCards.vue';
 import { usePlantsStore } from '../stores/PlantsStore';
-import { useGardenStore } from '../stores/gardenStore'; 
+import { useGardenStore } from '../stores/gardenStore';
 import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
-// Añadir ícono de filtro a la librería de FontAwesome
-library.add(faFilter);
+library.add(faFilter); // Agregar el icono de filtro a la librería
 
 const plantsStore = usePlantsStore();
 const gardenStore = useGardenStore();
-const searchQuery = ref('');
-const selectedCategory = ref('');
-const isDropdownOpen = ref(false); // Estado para controlar el dropdown
+const router = useRouter();
 
-// Cargar las plantas y categorías al montar el componente
+const searchQuery = ref(''); // Estado para el campo de búsqueda
+const selectedCategory = ref('');
+const isDropdownOpen = ref(false); // Estado para controlar el dropdown de categorías
+
+// Cargar plantas y categorías al montar el componente
 onMounted(() => {
   plantsStore.fetchPlants();
   plantsStore.fetchCategories();
@@ -27,10 +29,10 @@ const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
 
-// Función para seleccionar la categoría
+// Función para seleccionar la categoría y filtrar
 const selectCategory = async (category) => {
   selectedCategory.value = category;
-  isDropdownOpen.value = false; // Cerrar el dropdown
+  isDropdownOpen.value = false; // Cerrar el dropdown después de seleccionar
   await filterByCategory();
 };
 
@@ -39,7 +41,7 @@ const searchPlants = async () => {
   if (searchQuery.value) {
     await plantsStore.searchPlantsByName(searchQuery.value);
   } else {
-    await plantsStore.fetchPlants();
+    await plantsStore.fetchPlants(); // Recargar todas las plantas si no hay búsqueda
   }
 };
 
@@ -48,27 +50,32 @@ const filterByCategory = async () => {
   if (selectedCategory.value) {
     await plantsStore.filterPlantsByCategory(selectedCategory.value);
   } else {
-    await plantsStore.fetchPlants();
+    await plantsStore.fetchPlants(); // Recargar todas las plantas si no hay filtro
   }
 };
 
-// Manejar eventos de guía y agregar al jardín
+// Redirección a la vista de la guía
 const viewGuide = (guideId) => {
-  console.log(`Ver guía con ID: ${guideId}`);
+  if (guideId) {
+    router.push({ name: 'guide', params: { id: guideId } });
+  } else {
+    console.error('La guía no está disponible para esta planta.');
+  }
 };
 
+// Agregar planta al jardín
 const addToGarden = async (plantId) => {
   try {
-    await gardenStore.addPlant(plantId); // Llama a la acción del store para añadir al jardín
+    await gardenStore.addPlant(plantId);
     console.log(`Planta con ID: ${plantId} añadida al jardín`);
   } catch (error) {
     console.error('Error al añadir la planta al jardín:', error);
   }
 };
-// Computed properties para los datos de la store
+
+// Obtener las plantas y categorías desde el store
 const plants = computed(() => plantsStore.plants);
 const categories = computed(() => plantsStore.categories);
-
 </script>
 <template>
   <div>

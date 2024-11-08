@@ -66,3 +66,11 @@ class PlantsFilterByCategoryView(APIView):
 
         serializer = PlantsSerializer(plants, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+class PlantByGuideIdView(generics.RetrieveAPIView):
+    serializer_class = PlantsSerializer
+    lookup_field = 'guia'  # Asumiendo que el campo de relación con Guide es 'guia'
+    queryset = Plants.objects.all()
+    
+    def get_queryset(self):
+        guideId = self.kwargs.get('guia')
+        return Plants.objects.filter(guia=guideId)

@@ -6,7 +6,8 @@ from .views import (
     PlantsSearchByScientificNameView,
     PlantsFilterByCategoryView, 
     CategoryCreateView, 
-    CategoryListCreateView
+    CategoryListCreateView,
+    PlantByGuideIdView
 )
 
 urlpatterns = [
@@ -17,5 +18,6 @@ urlpatterns = [
     path('categoria/', CategoryListCreateView.as_view(), name='category-list-show'),  # Listar categorías
     path('buscar/', PlantsSearchByNameView.as_view(), name='plants-search-by-name'),  # Buscar plantas por nombre
     path('filtrar/<str:category>/', PlantsFilterByCategoryView.as_view(), name='plants-filter-by-category'),
-    path('buscar/cientifico/',PlantsSearchByScientificNameView.as_view(), name= 'search-by-scientific-name')  # Filtrar plantas por categoría
+    path('buscar/cientifico/',PlantsSearchByScientificNameView.as_view(), name= 'search-by-scientific-name'),
+    path('guia/<int:guia>/', PlantByGuideIdView.as_view(), name='plant-by-guide-id') # Filtrar plantas por categoría
 ]

@@ -36,7 +36,19 @@ export const searchPlantsByName = (name) => {
   return apiClient.get(`${API_URL}buscar/`, { params: { search: name } });
 };
 
+
+export const searchPlantsByScientificName = async (scientificName) => {
+  return await apiClient.get(`${API_URL}buscar/cientifico/`, {
+    params: {
+      search: scientificName
+    }
+  });
+};
 // Filtrar plantas por categoría
 export const filterPlantsByCategory = (categoryId) => {
   return apiClient.get(`${API_URL}filtrar/${categoryId}/`);
 };
+export const getPlantByGuideId = (guideId) => {
+  return apiClient.get(`${API_URL}guia/${guideId}/`);
+};
+

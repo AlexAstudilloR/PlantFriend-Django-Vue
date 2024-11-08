@@ -16,3 +16,8 @@ class GuideCreateView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)  # Valida los datos
         self.perform_create(serializer)  # Crea la instancia
         return Response(serializer.data, status=status.HTTP_201_CREATED) 
+    
+class GuideDetailView(generics.RetrieveAPIView):
+    queryset = Guides.objects.all()  # Obtiene todas las guías
+    serializer_class = GuidesSerializer  # Usa el serializador de guías
+    lookup_field = 'id'  # Busca por el campo 'id' en el modelo Guides
