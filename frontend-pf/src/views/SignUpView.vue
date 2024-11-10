@@ -5,12 +5,12 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'vue3-toastify';
-import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 // Agregar el ícono a la librería
 library.add(faCloudArrowUp)
 
 const userStore = useUserStore()
-const router= useRoute()
+const router= useRouter()
 const username = ref('')
 const nombre = ref('')
 const email = ref('')
@@ -26,29 +26,32 @@ const handleRegister = async () => {
   formData.append('email', email.value.trim());
   formData.append('telefono', telefono.value);
   formData.append('password', password.value);
-  formData.append('imagen', imagen.value); // Archivo de imagen
-function notify(){
-  toast.error('Ha ocurrido un error al crear el usuario',{
-        position: toast.POSITION.BOTTOM_RIGHT,
-      })
-}
+  formData.append('imagen', imagen.value);
+
   try {
     await userStore.register(formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        'Content-Type': 'multipart/form-data',
+      },
     });
-    toast.success('Usuario creado correctamente',{
-      position: toast.POSITION.BOTTOM_RIGHT,
-    })
-    router.push('/login')
+
+    // Solo muestra el toast de éxito y redirige si no hubo error en el registro
+    toast.success('Usuario creado correctamente', {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+
+    // Usa un pequeño retraso para asegurarte de que el toast se muestra antes de redirigir
+    setTimeout(() => {
+      router.push('/login');
+    }, 1000);
   } catch (error) {
-    
-      notify()
-    
+    // Verifica si el error es específico de creación de usuario
+    // Solo muestra el toast de error si realmente hay un error en el registro
+    toast.error('No se pudo crear el usuario', {
+      position: toast.POSITION.TOP_RIGHT,
+    });
   }
 };
-
 const triggerFileSelect = () => {
   document.getElementById('imagen').click()
 }

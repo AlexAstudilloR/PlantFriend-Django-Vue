@@ -18,7 +18,7 @@ import 'leaflet.awesome-markers/dist/leaflet.awesome-markers.css';
 import 'leaflet.awesome-markers';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { ref, onMounted } from 'vue';
-
+import {toast} from 'vue3-toastify'
 // Variables y datos de búsqueda
 const map = ref(null);
 const searchQuery = ref('');
@@ -61,6 +61,13 @@ onMounted(() => {
   });
   L.marker([-2.1433364632021212, -79.57640597670138], { icon: viveroIcon }).addTo(map.value)
     .bindPopup('<b>Vivero Milagro</b>');
+    const viveroPlantilandia = L.AwesomeMarkers.icon({
+    icon: 'seedling',
+    markerColor: 'green',
+    prefix: 'fa',
+  });
+  L.marker([-2.1310410852055983, -79.91311289283892], { icon: viveroPlantilandia }).addTo(map.value)
+    .bindPopup('<b>Vivero Plantilandia</b>');
 });
 
 // Función de búsqueda que centra el mapa en la ubicación buscada
@@ -73,7 +80,10 @@ const searchLocation = () => {
       .setContent(`Ubicación encontrada: ${searchQuery.value}`)
       .openOn(map.value);
   } else {
-    alert('Ubicación no encontrada. Intenta otro nombre.');
+    toast.error('No se encontró la dirección que buscaba, pruebe otra',{
+      position: toast.POSITION.TOP_RIGHT,
+      pauseOnHover: false
+    })
   }
 };
 </script>

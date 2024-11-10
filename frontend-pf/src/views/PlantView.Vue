@@ -7,54 +7,51 @@ import { useRouter } from 'vue-router';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
+import { SelfBuildingSquareSpinner } from 'epic-spinners';
 
-library.add(faFilter); // Agregar el icono de filtro a la librería
+library.add(faFilter);
 
 const plantsStore = usePlantsStore();
 const gardenStore = useGardenStore();
 const router = useRouter();
-
-const searchQuery = ref(''); // Estado para el campo de búsqueda
+const isLoading = ref(true); // Estado para controlar la visualización del spinner
+const searchQuery = ref('');
 const selectedCategory = ref('');
-const isDropdownOpen = ref(false); // Estado para controlar el dropdown de categorías
+const isDropdownOpen = ref(false);
 
-// Cargar plantas y categorías al montar el componente
-onMounted(() => {
-  plantsStore.fetchPlants();
-  plantsStore.fetchCategories();
+onMounted(async () => {
+  isLoading.value = true;
+  await plantsStore.fetchPlants();
+  await plantsStore.fetchCategories();
+  isLoading.value = false; // Ocultar el spinner después de cargar
 });
 
-// Función para alternar la visibilidad del dropdown
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
 
-// Función para seleccionar la categoría y filtrar
 const selectCategory = async (category) => {
   selectedCategory.value = category;
-  isDropdownOpen.value = false; // Cerrar el dropdown después de seleccionar
+  isDropdownOpen.value = false;
   await filterByCategory();
 };
 
-// Función para buscar plantas
 const searchPlants = async () => {
   if (searchQuery.value) {
     await plantsStore.searchPlantsByName(searchQuery.value);
   } else {
-    await plantsStore.fetchPlants(); // Recargar todas las plantas si no hay búsqueda
+    await plantsStore.fetchPlants();
   }
 };
 
-// Función para filtrar por categoría
 const filterByCategory = async () => {
   if (selectedCategory.value) {
     await plantsStore.filterPlantsByCategory(selectedCategory.value);
   } else {
-    await plantsStore.fetchPlants(); // Recargar todas las plantas si no hay filtro
+    await plantsStore.fetchPlants();
   }
 };
 
-// Redirección a la vista de la guía
 const viewGuide = (guideId) => {
   if (guideId) {
     router.push({ name: 'guide', params: { id: guideId } });
@@ -63,23 +60,20 @@ const viewGuide = (guideId) => {
   }
 };
 
-// Agregar planta al jardín
 const addToGarden = async (plantId) => {
   try {
     await gardenStore.addPlant(plantId);
-    console.log(`Planta con ID: ${plantId} añadida al jardín`);
   } catch (error) {
     console.error('Error al añadir la planta al jardín:', error);
   }
 };
 
-// Obtener las plantas y categorías desde el store
 const plants = computed(() => plantsStore.plants);
 const categories = computed(() => plantsStore.categories);
 </script>
+
 <template>
   <div>
-    <!-- Campo de búsqueda y selección de categoría -->
     <div class="search-filter-container">
       <input
         type="text"
@@ -90,14 +84,14 @@ const categories = computed(() => plantsStore.categories);
       />
       <div class="filter-dropdown">
         <button class="filter-button" @click="toggleDropdown">
-          Filtrar <font-awesome-icon class="icon" :icon="['fas', 'filter']" /> 
+          Filtrar <font-awesome-icon class="icon" :icon="['fas', 'filter']" />
         </button>
         <div v-if="isDropdownOpen" class="dropdown-content">
           <span class="label" @click="selectCategory('')">Todas las Categorías</span>
-          <span 
-            v-for="category in categories" 
-            :key="category.id" 
-            class="label" 
+          <span
+            v-for="category in categories"
+            :key="category.id"
+            class="label"
             @click="selectCategory(category.name)"
           >
             {{ category.name }}
@@ -106,8 +100,13 @@ const categories = computed(() => plantsStore.categories);
       </div>
     </div>
 
-    <div class="plant-container">
-      <!-- Lista de Plantas -->
+    <!-- Spinner de carga -->
+    <div v-if="isLoading" class="spinner-container">
+      <self-building-square-spinner :animation-duration="3000" :size="40" color="#4CAF50" />
+    </div>
+
+    <!-- Lista de Plantas -->
+    <div v-else class="plant-container">
       <div class="plants-list">
         <PlantsCards
           v-for="plant in plants"
@@ -120,39 +119,36 @@ const categories = computed(() => plantsStore.categories);
     </div>
   </div>
 </template>
-
-
-
-<style>
-
+<style scoped>
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 a{
     text-decoration: none;
     color: white;
 }
 
-.plant-container {
-    display: flex;
+.plant-card {
+    border: 1px solid #fffdfd;
+    border-radius: 8px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    margin: 10px;
+    padding: 20px;
+    text-align: center;
+    padding-top: 10px;
+}
+.plants-list{
+  display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     padding: 20px;
     position: relative;
 }
 
-.plant-card {
-    border: 1px solid #fffdfd;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin: 10px;
-    padding: 20px;
-    text-align: center;
-    padding-top: 10px;
-}
 
-.plant-card img {
-    width: 250px;
-    height: 240px;
-    border-radius: 8px;
-}
 
 button {
     background-color: #4CAF50;
@@ -164,6 +160,12 @@ button {
     font-size: 16px;
     border-radius: 4px;
     cursor: pointer;
+    
+}
+button:hover{
+  background-color: #459b48 ;
+ 
+  
 }
 .boton-guia{
     margin-bottom: 5px;

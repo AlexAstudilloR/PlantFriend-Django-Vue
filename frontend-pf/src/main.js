@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 import { createVfm } from 'vue-final-modal'
 import Vue3Toastify from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import 'vue-final-modal/style.css'
 
 import App from './App.vue'
 import router from './router'
