@@ -69,10 +69,8 @@ const removeFromGarden = async (plantId) => {
 onMounted(() => {
   gardenStore.getGarden();
 });
-watch(garden,async (newGarden) => {
-  if (newGarden.length > 0) {
-    await gardenStore.getGarden();
-  }
+watch(garden, (newGarden) => {
+  console.log("Nuevos datos en garden:", newGarden);
 });
 </script>
 
