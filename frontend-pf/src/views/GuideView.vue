@@ -1,15 +1,17 @@
 <template>
   <div v-if="!loading && guide">
-    <h1 class="title">{{guide.titulo}}</h1>
+    <h1 class="title">{{ guide.titulo }}</h1>
     <div class="container">
       <div class="grid">
         <!-- Mostrar la imagen de la planta si existe -->
         <div class="element img-container" v-if="plant && plant.imagen">
           <img :src="plant.imagen" :alt="plant.nombre" />
         </div>
-        <!-- Descripción de la guía -->
+        <!-- Descripción de la guía dividida en párrafos numerados -->
         <div class="element box">
-          <p>{{ guide.descripcion }}</p>
+          <p v-for="(sentence, index) in formattedDescription" :key="index">
+            {{ sentence.trim() }}
+          </p>
         </div>
       </div>
     </div>
@@ -26,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useGuideStore } from '../stores/guideStore';
 import { usePlantsStore } from '../stores/plantsStore';
@@ -48,14 +50,17 @@ const fetchGuideAndPlantData = async () => {
   await guideStore.fetchGuideById(guideId);
   guide.value = guideStore.guide; // Confirma si esta línea asigna bien la guía
 
-
-
   // Obtener la planta asociada usando el guideId
   await plantsStore.fetchPlantByGuideId(guideId);
   plant.value = plantsStore.plant;
 
   loading.value = false;
 };
+
+// Computed property para dividir la descripción en oraciones numeradas
+const formattedDescription = computed(() => {
+  return guide.value?.descripcion.split('.').filter(sentence => sentence.trim() !== '') || [];
+});
 
 onMounted(fetchGuideAndPlantData);
 
