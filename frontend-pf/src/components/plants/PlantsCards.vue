@@ -40,7 +40,7 @@ const addToGarden = () => {
       <img :src="plantImage" :alt="plant.nombre" />
       <h3>{{ plant.nombre }}</h3>
       <p>Categoría: {{ plant.categoria }}</p>
-      <button class="boton-guia" @click="viewGuide(plant.guideId)">Ver más</button>
+      <button class="boton-guia" @click="viewGuide(plant.guideId)">Ver guía</button>
       <button @click="addToGarden">
         <font-awesome-icon class="plus" :icon="['fas', 'circle-plus']" />
       </button>

@@ -64,7 +64,7 @@ const viewGuide = (guideId) => {
 };
 
 const addToGarden = async (plantId) => {
-  if (!userStore.isAuthenticated.value) {
+  if (!userStore.isAuthenticated) {
     toast.error("Debes estar logueado para añadir plantas al jardín", {
       position: toast.POSITION.TOP_RIGHT,
       pauseOnHover: false
