@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+
 import { useScanStore } from '../stores/scanStore'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
@@ -84,20 +85,19 @@ const submitImage = async () => {
   </div>
 
   <!-- Modal de Resultados -->
-  <ModalResults v-if="showModal" @close="showModal = false" title="Resultados del escaneo">
-    <div class="titleContainer">
-      <h4 class="sciName">Nombre Científico</h4>
-    </div>
-    <div v-if="imagePreview" id="image-preview-container" class="box-preview">
-      <img :src="imagePreview" alt="Vista previa de la imagen" id="image-preview" />
-    </div>
-    <p style="font-weight: 500">{{ nombreCientifico }}</p>
-    <h4>Descripción</h4>
-    <p style="text-align: center">{{ nombreComun }}</p>
-    <h4>Probabilidad</h4>
-    <p>{{ probabilidad }}</p>
-    <button id="custom-button">Ver planta</button>
-  </ModalResults>
+  <ModalResults :show="showModal" @close="showModal = false" title="Resultados del escaneo">
+      <div class="titleContainer">
+        <h4 class="sciName">Nombre Científico</h4>
+      </div>
+      <div v-if="imagePreview" id="image-preview-container" class="box-preview">
+        <img :src="imagePreview" alt="Vista previa de la imagen" id="image-preview" />
+      </div>
+      <p style="font-weight: 500">{{ nombreCientifico }}</p>
+      <h4>Descripción</h4>
+      <p style="text-align: center">{{ nombreComun }}</p>
+      <h4>Probabilidad</h4>
+      <p>{{ probabilidad }}</p>
+    </ModalResults>
 </template>
 
 <style scoped>

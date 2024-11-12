@@ -8,11 +8,14 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { SelfBuildingSquareSpinner } from 'epic-spinners';
+import {toast} from 'vue3-toastify';
+import { useUserStore } from '../stores/userStore';
 
 library.add(faFilter);
 
 const plantsStore = usePlantsStore();
 const gardenStore = useGardenStore();
+const userStore = useUserStore();
 const router = useRouter();
 const isLoading = ref(true); // Estado para controlar la visualización del spinner
 const searchQuery = ref('');
@@ -61,10 +64,25 @@ const viewGuide = (guideId) => {
 };
 
 const addToGarden = async (plantId) => {
+  if (!userStore.isAuthenticated.value) {
+    toast.error("Debes estar logueado para añadir plantas al jardín", {
+      position: toast.POSITION.TOP_RIGHT,
+      pauseOnHover: false
+    });
+    return;
+  }
+
   try {
     await gardenStore.addPlant(plantId);
+    toast.success("Se añadió la planta al jardín", {
+      position: toast.POSITION.TOP_RIGHT,
+      pauseOnHover: false
+    });
   } catch (error) {
-    console.error('Error al añadir la planta al jardín:', error);
+    toast.error("No se pudo añadir la planta al jardín", {
+      position: toast.POSITION.TOP_RIGHT,
+      pauseOnHover: false
+    });
   }
 };
 

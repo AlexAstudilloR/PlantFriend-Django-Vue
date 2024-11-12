@@ -52,32 +52,34 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import { useUserStore } from '@/stores/userStore'
-import { useRouter } from 'vue-router'
+import { computed, ref } from 'vue';
+import { useUserStore } from '@/stores/userStore';
+import { useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify';
 
-const userStore = useUserStore()
-const username = ref('')
-const password = ref('')
-const hidePassword = ref(true)
+const userStore = useUserStore();
+const username = ref('');
+const password = ref('');
+const hidePassword = ref(true);
 
-const router = useRouter()
+const router = useRouter();
 
-const passwordFieldType = computed(() => (hidePassword.value ? 'password' : 'text'))
-
-if (!userStore.isAuthenticated()) {
-  router.push('/login')
-}
+const passwordFieldType = computed(() => (hidePassword.value ? 'password' : 'text'));
 
 const handleLogin = async () => {
   try {
-    await userStore.login({ username: username.value, password: password.value })
-    router.push('/home')
+    await userStore.login({ username: username.value, password: password.value });
+    router.push('/home'); // Redirige solo después de un inicio de sesión exitoso
   } catch (error) {
-    alert('Error en el inicio de sesión. Verifica tus credenciales.')
+    toast.error('Ha ocurrido un error, verifica tus credenciales', {
+      position: toast.POSITION.TOP_RIGHT,
+      pauseOnHover: false
+    });
   }
-}
+};
 </script>
+
+
 
 <style scoped>
 @import "../assets/css/shared-styles.css";

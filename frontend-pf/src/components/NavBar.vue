@@ -39,7 +39,7 @@ import { useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
 import noProfilePicture from '../assets/imgs/noProfilePicture.jpg'
 library.add(faUser, faSignOutAlt, faBars);
-
+import { useGardenStore } from '../stores/gardenStore';
 const isMenuOpen = ref(false);
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
@@ -47,7 +47,7 @@ const toggleMenu = () => {
 
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
-
+const gardenStore= useGardenStore();
 // Observa cambios en el estado del usuario para actualizar el navbar
 watch(user, (newUser) => {
   if (newUser) {
@@ -62,6 +62,7 @@ const profileImage = computed(() => {
 
 const logout = () => {
   userStore.logout();
+  gardenStore.resetGarden();
 };
 
 const route = useRoute();

@@ -16,25 +16,18 @@ class UserGardenList(generics.ListAPIView):
         return Garden.objects.filter(user=self.request.user)
 
 # Agregar una planta al jardín
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
-from plantfriends.Garden.models import Garden
-from plantfriends.Plants.models import Plants
-
 class AddToGarden(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         garden, created = Garden.objects.get_or_create(user=request.user)
-        plant_id = request.data.get("plant_id")
+        plantId = request.data.get("plant_id")
 
-        if not plant_id:
+        if not plantId:
             return Response({"error": "ID de planta no proporcionado."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            plant = Plants.objects.get(id=plant_id)
+            plant = Plants.objects.get(id=plantId)
             garden.plants.add(plant)  # Agregar la planta al ManyToManyField
             garden.save()  # Guardar cambios en la base de datos
             return Response({"message": "Planta agregada al jardín."}, status=status.HTTP_200_OK)
@@ -47,10 +40,10 @@ class RemoveFromGarden(APIView):
 
     def delete(self, request, *args, **kwargs):
         garden, created = Garden.objects.get_or_create(user=request.user)
-        plant_id = kwargs.get("plant_id")
+        plantId = kwargs.get("plant_id")
 
         try:
-            plant = Plants.objects.get(id=plant_id)
+            plant = Plants.objects.get(id=plantId)
             garden.plants.remove(plant)
             return Response({"message": "Planta eliminada del jardín."}, status=status.HTTP_200_OK)
         except Plants.DoesNotExist:

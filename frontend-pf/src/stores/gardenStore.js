@@ -1,44 +1,45 @@
-// gardenStore.js
+// En tu store `gardenStore.js`
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { fetchUserGarden, addPlantToGarden, removePlantFromGarden } from '../services/axios.garden';
 
 export const useGardenStore = defineStore('garden', () => {
-  const garden = ref([]);
+  const garden = ref([]); // Aseguramos que `garden` sea un array
   const loading = ref(false);
 
-  // Obtener el jardín del usuario
   const getGarden = async () => {
     loading.value = true;
     try {
       const response = await fetchUserGarden();
-      garden.value = response.data.plants; // Asigna las plantas en el jardín al estado
+      garden.value = response.data.length > 0 ? response.data : []; // Asegura que garden siempre tenga un array
     } catch (error) {
       console.error('Error al obtener el jardín:', error);
+      garden.value = []; // Si hay un error, asigna un array vacío
     } finally {
       loading.value = false;
     }
   };
 
-  // Agregar una planta al jardín
   const addPlant = async (plantId) => {
     try {
       await addPlantToGarden(plantId);
-      await getGarden(); // Recargar el jardín después de agregar la planta
+      await getGarden();
     } catch (error) {
-      console.error('Error al agregar la planta:', error);
+      console.error('Error al agregar la planta al jardín:', error);
     }
   };
 
-  // Eliminar una planta del jardín
   const removePlant = async (plantId) => {
     try {
       await removePlantFromGarden(plantId);
-      await getGarden(); // Recargar el jardín después de eliminar la planta
+      await getGarden();
     } catch (error) {
-      console.error('Error al eliminar la planta:', error);
+      console.error('Error al eliminar la planta del jardín:', error);
     }
   };
+  const resetGarden = () => {
+    garden.value = [];
+  };
 
-  return { garden, loading, getGarden, addPlant, removePlant };
+  return { garden, loading, getGarden, addPlant, removePlant, resetGarden};
 });

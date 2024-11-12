@@ -1,21 +1,18 @@
+// userStore.js
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
-import { registerUser, loginUser } from '../services/axios.users'; // Ajusta la ruta según tu estructura
+import { ref, computed } from 'vue';
+import { registerUser, loginUser } from '../services/axios.users';
 
 export const useUserStore = defineStore('user', () => {
   const user = ref(null);
   const token = ref(localStorage.getItem('token'));
 
-  // Verificar si el usuario está autenticado
-  const isAuthenticated = () => {
-    return token.value !== null;
-  };
+  // Computed para verificar si está autenticado
+  const isAuthenticated = computed(() => token.value !== null);
 
   const register = async (userData) => {
-    
-  
     try {
-      const response = await registerUser(userData); // Pasa `userData` directamente
+      const response = await registerUser(userData);
       user.value = response.data.user;
       token.value = response.data.token;
       localStorage.setItem('token', token.value);
@@ -28,9 +25,8 @@ export const useUserStore = defineStore('user', () => {
   const login = async (userData) => {
     try {
       const response = await loginUser(userData);
-      console.log("Respuesta del servidor en login:", response.data); // Verifica la estructura de datos
-      user.value = response.data.user; // Asegúrate de que response.data.user sea correcto
-      token.value = response.data.access; // Asegúrate de que el token esté en response.data.access
+      user.value = response.data.user;
+      token.value = response.data.access;
       localStorage.setItem('token', token.value);
     } catch (error) {
       console.error('Error en el login:', error.response ? error.response.data : error);
@@ -45,4 +41,4 @@ export const useUserStore = defineStore('user', () => {
   };
 
   return { user, token, isAuthenticated, register, login, logout };
-}); 
+});

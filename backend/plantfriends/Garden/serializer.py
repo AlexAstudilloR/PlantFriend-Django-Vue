@@ -1,10 +1,11 @@
-
 from rest_framework import serializers
 from plantfriends.Garden.models import Garden
-from plantfriends.Plants.models import Plants
+from plantfriends.Plants.serializers import PlantsSerializer
+
+
 
 class GardenSerializer(serializers.ModelSerializer):
-    plants = serializers.PrimaryKeyRelatedField(queryset=Plants.objects.all(), many=True)
+    plants = PlantsSerializer(many=True, read_only=True)  # Mostrar detalles completos de las plantas
 
     class Meta:
         model = Garden

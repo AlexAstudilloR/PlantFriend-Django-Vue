@@ -12,7 +12,7 @@ apiClient.interceptors.request.use((config) => {
   
 
   // Evitar agregar el token en rutas de registro o inicio de sesión
-  const authRequiredRoutes = [ '/auth/garden/']; // Agrega aquí las rutas que necesitan token
+  const authRequiredRoutes = [ '/auth/garden']; // Agrega aquí las rutas que necesitan token
 
   if (token && authRequiredRoutes.some(route => config.url.startsWith(route))) {
     config.headers['Authorization'] = `Bearer ${token}`; // Incluye el token solo en las rutas que requieren autenticación
