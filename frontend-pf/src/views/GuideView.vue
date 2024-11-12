@@ -48,9 +48,7 @@ const fetchGuideAndPlantData = async () => {
   await guideStore.fetchGuideById(guideId);
   guide.value = guideStore.guide; // Confirma si esta línea asigna bien la guía
 
-  // Agrega un console.log adicional para ver el resultado
-  console.log("Guide data (after fetch):", guideStore.guide);
-  console.log("Guide local reference:", guide.value);
+
 
   // Obtener la planta asociada usando el guideId
   await plantsStore.fetchPlantByGuideId(guideId);

@@ -51,7 +51,10 @@ const viewGuide = (guideId) => {
   if (guideId) {
     router.push({ name: 'guide', params: { id: guideId } });
   } else {
-    console.error('La guía no está disponible para esta planta.');
+    toast.error("Error al obtener guia", {
+      position: toast.POSITION.TOP_RIGHT,
+      pauseOnHover: false
+    })
   }
 };
 
@@ -66,8 +69,10 @@ const removeFromGarden = async (plantId) => {
 onMounted(() => {
   gardenStore.getGarden();
 });
-watch(garden, (newGarden) => {
-  console.log("Nuevos datos en garden:", newGarden);
+watch(garden,async (newGarden) => {
+  if (newGarden.length > 0) {
+    await gardenStore.getGarden();
+  }
 });
 </script>
 

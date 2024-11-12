@@ -11,7 +11,7 @@ export const getGuides = async () => {
 // Obtener una guía específica por ID
 export const getGuideById = async (guideId) => {
   const response = await apiClient.get(`${API_URL}${guideId}/`);
-  console.log("Respuesta de getGuideById:", response.data); // Verifica la respuesta aquí
+  // Verifica la respuesta aquí
   return response;
 };
 
