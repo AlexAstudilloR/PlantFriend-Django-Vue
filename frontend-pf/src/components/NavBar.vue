@@ -70,7 +70,13 @@ const isAuthRoute = computed(() => ['login', 'register'].includes(route.name));
 </script>
 <style scoped>
 @import url('../assets/css/navbarHome.css');
-
+button{
+  border: 0;
+}
+button:hover {
+  transform: scale(1.01);
+  transition: all 0.3s;
+}
 .profile-pic {
   width: 40px;
   height: 40px;
