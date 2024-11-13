@@ -18,8 +18,23 @@ const telefono = ref('')
 const password = ref('')
 const imagen = ref(null)
 const imagenName= ref('')
+const telefonoError = ref('') // Mensaje de error para el teléfono
+
+const validateTelefono = () => {
+  if (telefono.value.length < 10) {
+    telefonoError.value = 'El número de teléfono debe tener al menos 10 dígitos';
+    return false;
+  }else if (telefono.value.length >10 ){
+    telefonoError.value = 'El número de teléfono no debe tener más de 10 dígitos';
+    return false;
+  }
+  telefonoError.value = '';
+  return true;
+};
 
 const handleRegister = async () => {
+  if (!validateTelefono()) return; // Detener el registro si el teléfono no es válido
+
   const formData = new FormData();
   formData.append('nombre', nombre.value);
   formData.append('username', username.value);
@@ -35,18 +50,14 @@ const handleRegister = async () => {
       },
     });
 
-    // Solo muestra el toast de éxito y redirige si no hubo error en el registro
     toast.success('Usuario creado correctamente', {
       position: toast.POSITION.TOP_RIGHT,
     });
 
-    // Usa un pequeño retraso para asegurarte de que el toast se muestra antes de redirigir
     setTimeout(() => {
       router.push('/login');
     }, 1000);
   } catch (error) {
-    // Verifica si el error es específico de creación de usuario
-    // Solo muestra el toast de error si realmente hay un error en el registro
     toast.error('No se pudo crear el usuario', {
       position: toast.POSITION.TOP_RIGHT,
     });
@@ -57,9 +68,10 @@ const triggerFileSelect = () => {
 }
 const handleFileChange = (e) => {
   imagen.value = e.target.files[0];
-  imagenName.value = imagen.value ? imagen.value.name : ''; // Guarda el nombre del archivo
+  imagenName.value = imagen.value ? imagen.value.name : ''; 
 };
 </script>
+
 <template>
   <div class="split-screen">
     <div class="left">
@@ -85,14 +97,17 @@ const handleFileChange = (e) => {
               <span v-if="imagenName" class="img-txt">{{ imagenName }}</span>
             </div>
           </div>
+
+          <!-- Campo del teléfono con validación -->
           <div class="input-container name">
-            <label for="username">Nombre de usuario</label>
-            <input type="text" id="username" placeholder="Ingrese su nombre de usuario" v-model="username" name="username" />
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" placeholder="Ingrese su número de teléfono" v-model="telefono" name="telefono" @blur="validateTelefono" />
+            <span v-if="telefonoError" class="error">{{ telefonoError }}</span> <!-- Muestra el mensaje de error si es necesario -->
           </div>
 
           <div class="input-container name">
-            <label for="telefono">Teléfono</label>
-            <input type="tel" id="telefono" placeholder="Ingrese su número de teléfono" v-model="telefono" name="telefono" />
+            <label for="username">Nombre de usuario</label>
+            <input type="text" id="username" placeholder="Ingrese su nombre de usuario" v-model="username" name="username" />
           </div>
 
           <div class="input-container name">
@@ -127,4 +142,8 @@ const handleFileChange = (e) => {
 
 <style scoped>
 @import url('../assets/css/signUp.css');
+.error {
+  color: red;
+  font-size: 0.9em;
+}
 </style>

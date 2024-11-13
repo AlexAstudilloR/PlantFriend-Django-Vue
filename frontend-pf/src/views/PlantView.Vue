@@ -120,7 +120,7 @@ const categories = computed(() => plantsStore.categories);
 
     <!-- Spinner de carga -->
     <div v-if="isLoading" class="spinner-container">
-      <self-building-square-spinner :animation-duration="3000" :size="40" color="#4CAF50" />
+      <self-building-square-spinner :animation-duration="2283" :size="40" color="#4CAF50" />
     </div>
 
     <!-- Lista de Plantas -->
