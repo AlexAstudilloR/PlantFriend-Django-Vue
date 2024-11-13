@@ -1,8 +1,7 @@
 <template>
   <div v-if="isVisible" class="modal-overlay" @click="closeModal">
     <div class="modal-container" @click.stop>
-      <h2 class="modal-title">{{ title }}</h2>
-      <slot></slot>
+      <slot></slot> <!-- Todo el contenido del modal, incluyendo el título, será pasado aquí -->
       <button class="close-button" @click="closeModal">Cerrar</button>
     </div>
   </div>
@@ -13,10 +12,6 @@ import { ref, defineProps, defineEmits, watch } from 'vue';
 const isVisible = ref(false);
 
 const props = defineProps({
-  title: {
-    type: String,
-    default: 'Modal Title',
-  },
   show: Boolean,
 });
 
@@ -42,10 +37,10 @@ const closeModal = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* Fondo oscuro */
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
-  justify-content: center; /* Centrado horizontal */
-  align-items: center; /* Centrado vertical */
+  justify-content: center;
+  align-items: center;
   z-index: 1000;
 }
 
@@ -55,15 +50,11 @@ const closeModal = () => {
   border-radius: 8px;
   max-width: 90%;
   width: 500px;
-  height: 700px; /* Ancho fijo */
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
   text-align: center;
-}
-
-.modal-title {
-  font-size: 1.5em;
-  font-weight: bold;
-  margin: 0 0 20px;
-  color: #21863a;
+  overflow-y: auto;
 }
 
 .close-button {

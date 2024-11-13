@@ -85,19 +85,38 @@ const submitImage = async () => {
   </div>
 
   <!-- Modal de Resultados -->
-  <ModalResults :show="showModal" @close="showModal = false" title="Resultados del escaneo">
-      <div class="titleContainer">
-        <h4 class="sciName">Nombre Científico</h4>
-      </div>
-      <div v-if="imagePreview" id="image-preview-container" class="box-preview">
-        <img :src="imagePreview" alt="Vista previa de la imagen" id="image-preview" />
-      </div>
+  <ModalResults :show="showModal" @close="showModal = false">
+  
+  <div class="titleContainer">
+    <h4 class="modal-title">Resultados del Escaneo</h4>
+    <div v-if="imagePreview" id="image-preview-container" class="box-preview">
+      <img :src="imagePreview" alt="Vista previa de la imagen" id="image-preview" />
+    </div>
+
+    <!-- Mostrar mensaje de error si la probabilidad es baja -->
+    <div v-if="probabilidad < 0.05">
+      <p style="color: red; font-weight: bold; text-align: center;">
+        ¿Está seguro que subió imagen de una planta?. Intente nuevamente.
+      </p>
+    </div>
+
+    <!-- Mostrar los datos solo si la probabilidad es suficiente -->
+    <template v-else>
       <p style="font-weight: 500">{{ nombreCientifico }}</p>
+
+      <div v-if="nombreCientifico === 'Desconocido' || nombreComun === 'No disponible'">
+        <p style="color: red; font-weight: bold;">
+          No se obtuvo una planta de forma precisa, intente nuevamente
+        </p>
+      </div>
+
       <h4>Descripción</h4>
       <p style="text-align: center">{{ nombreComun }}</p>
       <h4>Probabilidad</h4>
       <p>{{ probabilidad }}</p>
-    </ModalResults>
+    </template>
+  </div>
+</ModalResults>
 </template>
 
 <style scoped>
@@ -127,7 +146,10 @@ const submitImage = async () => {
   padding: 50px;
   background-color: #ffffff;
 }
-
+.modal-title{
+  color: #4caf50;
+  text-align: center;
+}
 .scanner-section h1 {
   color: #4caf50;
   font-family: 'Poppins', sans-serif;
