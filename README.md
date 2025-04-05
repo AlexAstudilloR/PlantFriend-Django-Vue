@@ -9,7 +9,7 @@ python -m venv venv
 ```bash
 cd venv\Scripts\activate
 ```
-3. Con el entorno virtual activado, entren a la carpeta backend mediante la consola. ¡Cuidado con ejecutar los comandos de ahora sin eso! (Esto va para ustedes CNG, que ni ven y se quejan).
+3. Con el entorno virtual activado, entren a la carpeta backend mediante la consola. ¡Cuidado con ejecutar los comandos de ahora sin eso! 
 4. Una vez ahí en esa carpeta, usen el comando para instalar las dependencias.
 ```bash
 pip install -r requirements.txt
