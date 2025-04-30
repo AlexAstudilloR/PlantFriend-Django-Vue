@@ -3,6 +3,5 @@ from .views import RegisterUserView, LoginUserView
 
 urlpatterns = [
     path('register/', RegisterUserView.as_view(), name='register'),
-    path('login/', LoginUserView.as_view(), name='login'),
-    path('logout/',LoginUserView.as_view(), name= 'logout') 
+    path('login/', LoginUserView.as_view(), name='login'),  # Ruta para el login
 ]
