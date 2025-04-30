@@ -32,7 +32,7 @@ class CustomUser(AbstractBaseUser):
     email = models.EmailField(unique=True)
     nombre = models.CharField(max_length=50, default='')  # Aumentado el tamaño del campo
     telefono = models.CharField(max_length=10, blank=True, default='') 
-    image = models.ImageField(upload_to='user/', null= True, blank=True) # Cambiado a string vacío por defecto
+    imagen = models.ImageField(upload_to='user/', null= True, blank=True) # Cambiado a string vacío por defecto
     created_at = models.DateTimeField(auto_now_add=True)
 
     # Campos necesarios para el superusuario
